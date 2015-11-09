@@ -15,6 +15,8 @@ ApplicationWindow {
 	height: Screen.desktopAvailableHeight
 	title: "Elektra Editor"
 
+	//**Properties*********************************************************************************************//
+
 	property int    defaultMargins: 8
 	property int    defaultSpacing: defaultMargins*0.5
 	property int    keyAreaHeight: Math.ceil(mainRow.height*0.7 - defaultSpacing)
@@ -23,6 +25,8 @@ ApplicationWindow {
 	property int    metaAreaHeight: Math.floor(mainRow.height*0.3)
 	property int    deltaMetaAreaHeight: Math.floor(mainRow.height*0.25 - defaultSpacing)
 	property int    searchResultsAreaHeight: Math.ceil(mainRow.height*0.25)
+
+	//**Colors*************************************************************************************************//
 
 	SystemPalette {
 		id: activePalette
@@ -37,19 +41,34 @@ ApplicationWindow {
 		colorGroup: SystemPalette.Disabled
 	}
 
-	menuBar: MenuBar {
-		Menu {
-			title: qsTr("File")
-			MenuItem {
-				text: qsTr("&Open")
-				onTriggered: console.log("Open action triggered");
-			}
-			MenuItem {
-				text: qsTr("Exit")
-				onTriggered: Qt.quit();
+	//**Menus & Toolbars***************************************************************************************//
+
+	menuBar: MainMenuBar {
+		id:mainMenuBar
+	}
+
+	//	toolBar: MainToolBar {
+	//		id:mainToolbar
+	//	}
+
+	statusBar: StatusBar {
+		id:mainStatusBar
+
+		RowLayout {
+			id: statusBarRow
+
+			Label {
+				id: path
+
+				anchors.fill: parent
+				anchors.leftMargin: defaultMargins
+				text: !treeView.selection.hasSelection ? "" : filteredTreeModel.data(treeView.currentIndex, 258) + (!keyAreaView.selection.hasSelection ? "" :  "/" + treeModel.data(keyAreaView.currentIndex, 257))
 			}
 		}
 	}
+
+	//**Layouts & Views****************************************************************************************//
+
 	Row {
 		id: mainRow
 
@@ -75,13 +94,19 @@ ApplicationWindow {
 
 				model: filteredTreeModel
 
+				selection: ItemSelectionModel {
+					model: filteredTreeModel
+				}
+
 				onClicked: {
 					if(filteredTreeModel.data(currentIndex, 263)) {
 						keyAreaView.model = treeModel
+						keyAreaView.selection.model = treeModel
 						keyAreaView.rootIndex = filteredTreeModel.mapToSource(currentIndex)
 					}
 					else {
 						keyAreaView.model = null
+						keyAreaView.selection.clear()
 					}
 					metaAreaView.model = null
 				}
@@ -106,7 +131,7 @@ ApplicationWindow {
 						width: label.font.pixelSize*0.85
 						height: width
 						anchors.verticalCenter: label.verticalCenter
-						opacity:filteredTreeModel !== null ? (filteredTreeModel.data(styleData.index, 262) > 0 && filteredTreeModel.data(styleData.index, 263) ? 1 : 0) : 0
+						opacity: filteredTreeModel !== null ? (filteredTreeModel.data(styleData.index, 262) > 0 && filteredTreeModel.data(styleData.index, 263) ? 1 : 0) : 0
 					}
 				}
 
@@ -135,6 +160,10 @@ ApplicationWindow {
 					alternatingRowColors: false
 					backgroundVisible: false
 					onClicked: metaAreaView.model = treeModel.data(currentIndex, 266)
+
+					selection: ItemSelectionModel {
+
+					}
 
 					TableViewColumn {
 						id: nameColumn

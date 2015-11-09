@@ -242,7 +242,7 @@ QHash<int, QByteArray> TreeModel::roleNames() const
 {
 	QHash<int, QByteArray> roles;
 
-	roles[BaseNameRole] = "baseName";
+	roles[BaseNameRole] = "baseName";//257
 	roles[NameRole] = "name";
 	roles[ValueRole] = "value";
 	roles[ChildrenRole] = "children";

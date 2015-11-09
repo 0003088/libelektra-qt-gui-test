@@ -10,43 +10,43 @@ MenuBar {
 
 		MenuItem {
 			id:dbImport
-			action: importAction
+//			action: importAction
 		}
 		MenuItem {
 			id:dbExport
-			action: exportAction
+//			action: exportAction
 		}
 
 		MenuSeparator{}
 
 		MenuItem {
 			id:dbCreateBackend
-			action: mountBackendAction
+//			action: mountBackendAction
 		}
 		MenuItem {
 			id:dbUnmountBackend
-			action: unmountBackendAction
+//			action: unmountBackendAction
 		}
 
 		MenuSeparator{}
 
 		MenuItem {
 			id: dbSynchronize
-			action: synchronizeAction
+//			action: synchronizeAction
 		}
 
 		MenuSeparator{}
 
 		MenuItem {
 			id: dbPluginInfo
-			action: pluginInfoAction
+//			action: pluginInfoAction
 		}
 
 		MenuSeparator{}
 
 		MenuItem {
 			id:dbExit
-			action: quitAction
+//			action: quitAction
 		}
 	}
 
@@ -56,11 +56,11 @@ MenuBar {
 
 		MenuItem {
 			id:edUndo
-			action: undoAction
+//			action: undoAction
 		}
 		MenuItem {
 			id:edRedo
-			action: redoAction
+//			action: redoAction
 		}
 
 		MenuSeparator{}
@@ -71,36 +71,36 @@ MenuBar {
 
 			MenuItem {
 				id:edNewKey
-				action: newKeyAction
+//				action: newKeyAction
 			}
 			MenuItem {
 				id:edNewArray
-				action: newArrayAction
+//				action: newArrayAction
 			}
 		}
 
 		MenuItem {
 			id:edEdit
-			action: editAction
+//			action: editAction
 		}
 
 		MenuSeparator{}
 
 		MenuItem {
 			id:edCut
-			action: cutAction
+//			action: cutAction
 		}
 		MenuItem {
 			id:edCopy
-			action: copyAction
+//			action: copyAction
 		}
 		MenuItem {
 			id:edPaste
-			action: pasteAction
+//			action: pasteAction
 		}
 		MenuItem {
 			id:edDelete
-			action: deleteAction
+//			action: deleteAction
 		}
 	}
 
@@ -109,7 +109,7 @@ MenuBar {
 		title: qsTr("Settings")
 
 		MenuItem {
-			action: chooseColorAction
+//			action: chooseColorAction
 		}
 	}
 
@@ -117,11 +117,11 @@ MenuBar {
 		id: help
 		title: qsTr("&Help")
 		MenuItem {
-			action: whatsThisAction
+//			action: whatsThisAction
 		}
 		MenuSeparator{}
 		MenuItem {
-			action: aboutAction
+//			action: aboutAction
 		}
 	}
 }
