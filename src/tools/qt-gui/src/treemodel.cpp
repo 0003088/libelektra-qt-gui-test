@@ -55,9 +55,7 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
 	if (!index.isValid())
-	{
 		return QVariant();
-	}
 
 	TreeItem* item = getItem(index);
 
@@ -96,9 +94,17 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 	case MetaDataRole:
 		return QVariant::fromValue(item->metaData());
 
+	case ItemRole:
+		return QVariant::fromValue(item);
+
 	default:
 		return QVariant();
 	}
+}
+
+bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+
 }
 
 void TreeModel::populateModel()
@@ -245,13 +251,14 @@ QHash<int, QByteArray> TreeModel::roleNames() const
 	roles[BaseNameRole] = "baseName";//257
 	roles[NameRole] = "name";
 	roles[ValueRole] = "value";
-	roles[ChildrenRole] = "children";
+	roles[ChildrenRole] = "children";//260
 	roles[ParentRole] = "parent";
 	roles[ChildCountRole] = "childCount";
-	roles[ChildrenAreLeavesRole] = "childrenAreLeaves";
+	roles[ChildrenAreLeavesRole] = "childrenAreLeaves";//263
 	roles[RootRole] = "root";
 	roles[IsNullRole] = "isNull";
-	roles[MetaDataRole] = "metaData";
+	roles[MetaDataRole] = "metaData";//266
+	roles[ItemRole] = "item";
 	qDebug() << "BaseNameRole" << BaseNameRole;
 	return roles;
 }

@@ -281,12 +281,19 @@ Item {
 		iconSource: "icons/edit-rename.png"
 		text: qsTr("Edit ...")
 		tooltip: qsTr("Edit")
-		enabled: !(treeView.currentNode === null && keyAreaSelectedItem === null && searchResultsSelectedItem === null)
+		enabled: treeView.selection.hasSelection || keyAreaView.selection.hasSelection || searchResultsView.selection.hasSelection
 
 		onTriggered: {
-			if(editKeyWindow.accessFromSearchResults){
-				editKeyWindow.selectedNode = searchResultsListView.model.get(searchResultsListView.currentIndex)
+			if(searchResultsView.selection.hasSelection){
+				editKeyWindow.selectedNode = searchResultsView.currentIndex
 			}
+			else if(keyAreaView.selection.hasSelection) {
+				editKeyWindow.selectedNode = keyAreaView.currentIndex
+			}
+			else if(treeView.selection.hasSelection) {
+				editKeyWindow.selectedNode = filteredTreeModel.mapToSource(treeView.currentIndex)
+			}
+
 			editKeyWindow.populateMetaArea()
 			editKeyWindow.show()
 		}

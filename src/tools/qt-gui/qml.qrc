@@ -59,5 +59,18 @@
         <file>src/treemodel.cpp</file>
         <file>src/treemodel.hpp</file>
         <file>qml/GUIActions.qml</file>
+        <file>qml/AboutWindow.qml</file>
+        <file>qml/ChooseColorWindow.qml</file>
+        <file>qml/EditKeyWindow.qml</file>
+        <file>qml/NewKeyWindow.qml</file>
+        <file>qml/PluginInfo.qml</file>
+        <file>qml/UnmountBackendWindow.qml</file>
+        <file>qml/WizardLoader.qml</file>
+        <file>qml/BasicWindow.qml</file>
+        <file>qml/KeyWindow.qml</file>
+        <file>qml/NewMetaKey.qml</file>
+        <file>qml/MainFunctions.js</file>
+        <file>src/editkeycommand.cpp</file>
+        <file>src/editkeycommand.hpp</file>
     </qresource>
 </RCC>

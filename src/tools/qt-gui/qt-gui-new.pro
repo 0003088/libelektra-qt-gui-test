@@ -10,7 +10,8 @@ CONFIG += qml_debug
 
 RESOURCES += qml.qrc
 
-OTHER_FILES +=	$$PWD/qml/*.qml
+OTHER_FILES +=	$$PWD/qml/*.qml\
+				$$PWD/qml/*.js
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

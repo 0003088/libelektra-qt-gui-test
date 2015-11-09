@@ -187,7 +187,7 @@ void TreeItem::populateMetaModel()
 			item->setMetaName(QString::fromStdString(m_key.currentMeta().getName()));
 			item->setMetaValue(QVariant::fromValue(QString::fromStdString(m_key.currentMeta().getString())));
 
-			m_metaData->append(item);
+			m_metaData->insertRow(m_metaData->rowCount(), item);
 		}
 	}
 }

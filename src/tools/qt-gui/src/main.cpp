@@ -14,8 +14,10 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 
 	qRegisterMetaType<TreeModel>("TreeModel");
+	qRegisterMetaType<MetaModel>("TreeItem");
 	qRegisterMetaType<MetaModel>("MetaModel");
-	qRegisterMetaType<UndoManager>	("UndoManager");
+	qRegisterMetaType<UndoManager>("UndoManager");
+	qmlRegisterType<DataContainer>("org.libelektra.qtgui", 1, 0, "DataContainer");
 
 	QQmlApplicationEngine engine;
 	QQmlContext* ctxt = engine.rootContext();

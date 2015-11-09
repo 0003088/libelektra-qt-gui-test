@@ -19,11 +19,12 @@ public:
 	explicit MetaModel(const QObject* parent = 0);
 	MetaModel(const MetaModel &other) {Q_UNUSED(other)}
 
-	int			rowCount(const QModelIndex &parent = QModelIndex()) const;
-	QVariant	data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-	void		clear();
-	void		append(MetaItem* item);
-	QHash<int, QByteArray> roleNames() const;
+	int												rowCount(const QModelIndex &parent = QModelIndex()) const;
+	QVariant										data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	void											clear();
+	void											insertRow(int row, MetaItem *item);
+	QHash<int, QByteArray>							roleNames() const;
+	Q_INVOKABLE				QVariantMap				get(const int &idx) const;
 
 private:
 	QList<MetaItem*> m_model;

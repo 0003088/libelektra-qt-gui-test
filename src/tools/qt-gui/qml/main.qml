@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.0
 import Qt.labs.folderlistmodel 2.1
+import org.libelektra.qtgui 1.0
 
 ApplicationWindow {
 	id: mainWindow
@@ -39,6 +40,12 @@ ApplicationWindow {
 	property int    searchResultsAreaHeight: Math.ceil(mainRow.height*0.25)
 	property bool	helpMode: false
 
+	property string version: "0.0.9 (beta)"
+
+	DataContainer {
+		id: container
+	}
+
 	//**Colors*************************************************************************************************//
 
 	SystemPalette {
@@ -52,6 +59,71 @@ ApplicationWindow {
 	SystemPalette {
 		id: disabledPalette
 		colorGroup: SystemPalette.Disabled
+	}
+
+	//**Windows************************************************************************************************//
+
+	NewKeyWindow {
+		id: newKeyWindow
+
+		onVisibleChanged: {
+			if(visible === true){
+
+				nameTextField.forceActiveFocus()
+			}
+		}
+	}
+
+	EditKeyWindow {
+		id: editKeyWindow
+
+		onVisibleChanged: {
+			if(visible === true){
+				if(nameTextField.text.charAt(0) === '#'){
+					editKeyWindow.title = qsTr("Edit Array Entry")
+					nameTextField.textColor = disabledPalette.text
+					nameTextField.readOnly = true
+					valueTextField.forceActiveFocus()
+				}
+			}
+		}
+	}
+
+	NewKeyWindow {
+		id: newArrayWindow
+
+		title: qsTr("Create new Array Entry")
+
+		onVisibleChanged: {
+			if(visible === true){
+				nameTextField.readOnly = true
+				nameTextField.textColor = disabledPalette.text
+				nameTextField.text = selectedNode.children.getCurrentArrayNo()
+				valueTextField.forceActiveFocus()
+			}
+		}
+	}
+
+	UnmountBackendWindow {
+		id: unmountBackendWindow
+
+		okButton.action.onTriggered: unmountBackendWindow.close()
+	}
+
+	WizardLoader {
+		id: wizardLoader
+	}
+
+	AboutWindow {
+		id: aboutWindow
+	}
+
+	PluginInfo {
+		id: pluginInfo
+	}
+
+	ChooseColorWindow {
+		id: chooseColorWindow
 	}
 
 	//**Actions************************************************************************************************//
@@ -230,6 +302,147 @@ ApplicationWindow {
 						title: qsTr("Metakey Value")
 						width: Math.ceil(metaArea.width*0.5 - defaultSpacing*0.5)
 					}
+				}
+			}
+			BasicRectangle {
+				id: searchResultsArea
+
+				width: keyAreaWidth
+				height: searchResultsAreaHeight
+				visible: false
+
+				SequentialAnimation {
+					id: searchResultsColorAnimation
+
+					ColorAnimation {
+						target: searchResultsArea
+						property: "border.color"
+						to: (searchResultsArea.visible &&  searchResultsListView.model !== null) ? (searchResultsListView.model.get(0).name === "NotfoundNode" ? "red" : "green") : activePalette.dark
+						duration: 0
+					}
+					ColorAnimation {
+						target: searchResultsArea
+						property: "border.color"
+						to: activePalette.dark
+						duration: 1000
+					}
+				}
+
+				ToolButton {
+					id: searchResultsCloseButton
+
+					iconSource: "icons/dialog-close.png"
+					anchors.right: parent.right
+					anchors.top: parent.top
+					anchors.margins: defaultSpacing
+					tooltip: qsTr("Close")
+					onClicked: {
+						keyMetaColumn.state = ""
+						searchResultsSelectedItem = null
+						searchResultsListView.model.discardModel()
+						searchResultsListView.model = null
+					}
+				}
+
+				ScrollView {
+					id: searchResultsScrollView
+
+					anchors.fill: parent
+					anchors.margins: defaultMargins
+					anchors.rightMargin: searchResultsCloseButton.width
+
+					TreeView {
+						id: searchResultsView
+
+						anchors.fill: parent
+						clip: true
+//						highlightMoveDuration: 0
+//						highlightResizeDuration: 0
+//						keyNavigationWraps: true
+						model: null
+
+						selection: ItemSelectionModel {
+
+						}
+
+						TableViewColumn {
+							id: searchResultsColumn
+						}
+
+						//						Keys.onPressed: {
+						//							if(event.key === Qt.Key_Up && searchResultsListView.currentIndex > 0){
+						//								currentIndex--
+						//								searchResultsSelectedItem = model.get(currentIndex)
+						//							}
+						//							else if(event.key === Qt.Key_Down && searchResultsListView.currentIndex < model.rowCount() - 1){
+						//								currentIndex++
+						//								searchResultsSelectedItem = model.get(currentIndex)
+						//							}
+						//							else if((event.key === Qt.Key_Enter || event.key === Qt.Key_Return) && searchResultsSelectedItem !== null){
+						//								editKeyWindow.selectedNode = searchResultsSelectedItem
+						//								editKeyWindow.accessFromSearchResults = true
+						//								editAction.trigger()
+						//							}
+						//						}
+
+						//						highlight: Rectangle {
+						//							id: highlightBar
+						//							color: guiSettings.highlightColor
+						//						}
+
+						//						delegate: Text {
+						//							color: guiSettings.nodeWithKeyColor
+						//							text: path
+
+						//							MouseArea {
+						//								anchors.fill: parent
+						//								acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+						//								onClicked: {
+						//									if(searchResultsListView.model.get(0).name !== "NotfoundNode"){
+						//										if(mouse.button === Qt.LeftButton){
+						//											searchResultsListView.currentIndex = index
+						//											searchResultsSelectedItem = searchResultsListView.model.get(searchResultsListView.currentIndex)
+						//											forceActiveFocus()
+						//										}
+						//										else if(mouse.button === Qt.RightButton) {
+						//											searchResultsListView.currentIndex = index
+						//											searchResultsSelectedItem = searchResultsListView.model.get(searchResultsListView.currentIndex)
+						//											forceActiveFocus()
+						//											editKeyWindow.accessFromSearchResults = true
+						//											searchResultsContextMenu.popup()
+						//										}
+						//									}
+						//								}
+						//								onDoubleClicked: {
+						//									if(searchResultsListView.model.get(0).name !== "NotfoundNode"){
+						//										searchResultsListView.currentIndex = index
+						//										forceActiveFocus()
+						//										editKeyWindow.accessFromSearchResults = true
+						//										editKeyWindow.selectedNode = searchResultsListView.model.get(searchResultsListView.currentIndex)
+						//										editAction.trigger()
+						//									}
+						//								}
+						//							}
+						//						}
+					}
+				}
+			}
+			states:
+				State {
+				name: "SHOW_SEARCH_RESULTS"
+
+				PropertyChanges {
+					target: keyArea
+					height: deltaKeyAreaHeight
+				}
+				PropertyChanges {
+					target: metaArea
+					height: deltaMetaAreaHeight
+				}
+				PropertyChanges {
+					target: searchResultsArea
+					visible: true
 				}
 			}
 		}

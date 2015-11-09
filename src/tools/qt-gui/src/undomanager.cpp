@@ -1,6 +1,6 @@
 #include <QUndoStack>
 #include "undomanager.hpp"
-//#include "editkeycommand.hpp"
+#include "editkeycommand.hpp"
 //#include "deletekeycommand.hpp"
 //#include "newkeycommand.hpp"
 //#include "copykeycommand.hpp"
@@ -30,32 +30,32 @@ bool UndoManager::canRedo() const
 	return m_undoStack->canRedo();
 }
 
-void UndoManager::createEditKeyCommand(QModelIndex* parent, DataContainer* data)
+void UndoManager::createEditKeyCommand(TreeModel* model, const QModelIndex &index, DataContainer* data)
 {
-//	m_undoStack->push(new EditKeyCommand(model, idx, data));
+	m_undoStack->push(new EditKeyCommand(model, index, data));
 }
 
-void UndoManager::createDeleteKeyCommand(const QString& type, QModelIndex* parent)
+void UndoManager::createDeleteKeyCommand(const QString& type, const QModelIndex &index)
 {
 //	m_undoStack->push(new DeleteKeyCommand(type, model, idx));
 }
 
-void UndoManager::createNewKeyCommand(QModelIndex* parent, DataContainer* data, bool isBelow)
+void UndoManager::createNewKeyCommand(const QModelIndex &index, DataContainer* data, bool isBelow)
 {
 //	m_undoStack->push(new NewKeyCommand(model, idx, data, isBelow));
 }
 
-void UndoManager::createCopyKeyCommand(QModelIndex* parent)
+void UndoManager::createCopyKeyCommand(const QModelIndex &index)
 {
 //	m_undoStack->push(new CopyKeyCommand(m_clipboardType, qvariant_cast<ConfigNodePtr>(m_clipboard->property("source")), model->model().at(idx)));
 }
 
-void UndoManager::createCutKeyCommand(QModelIndex* parent)
+void UndoManager::createCutKeyCommand(const QModelIndex &index)
 {
 //	m_undoStack->push(new CutKeyCommand(m_clipboardType, qvariant_cast<ConfigNodePtr>(m_clipboard->property("source")), model->model().at(idx), m_clipboard->property("index").toInt()));
 }
 
-void UndoManager::createImportConfigurationCommand(QModelIndex* parent, DataContainer* data)
+void UndoManager::createImportConfigurationCommand(const QModelIndex &index, DataContainer* data)
 {
 //	m_undoStack->push(new ImportConfigurationCommand(model, idx, data));
 }
@@ -115,7 +115,7 @@ QString UndoManager::clipboardType() const
 	return m_clipboardType;
 }
 
-void UndoManager::putToClipboard(const QString& type, QModelIndex* parent)
+void UndoManager::putToClipboard(const QString& type, const QModelIndex &index)
 {
 //	m_clipboardType = type;
 

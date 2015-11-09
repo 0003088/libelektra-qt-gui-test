@@ -1,8 +1,8 @@
 #include "metamodel.hpp"
+#include <QDebug>
 
 MetaModel::MetaModel(const QObject *parent)
 {
-
 }
 
 int MetaModel::rowCount(const QModelIndex &parent) const
@@ -13,11 +13,6 @@ int MetaModel::rowCount(const QModelIndex &parent) const
 QVariant MetaModel::data(const QModelIndex &index, int role) const
 {
 	if (!index.isValid())
-	{
-		return QVariant();
-	}
-
-	if (index.row() > (m_model.size() - 1))
 	{
 		return QVariant();
 	}
@@ -44,18 +39,30 @@ void MetaModel::clear()
 	endResetModel();
 }
 
-void MetaModel::append(MetaItem *item)
+void MetaModel::insertRow(int row, MetaItem *item)
 {
-	beginInsertRows(QModelIndex(), m_model.count(), m_model.count());
-	m_model.append(item);
+	beginInsertRows(QModelIndex(), row, row);
+	m_model.insert(row, item);
 	endInsertRows();
+}
+
+QVariantMap MetaModel::get(const int& idx) const
+{
+	QVariantMap map;
+
+	foreach (int k, roleNames().keys())
+	{
+		map[roleNames().value(k)] = data(index(idx, 0), k);
+	}
+
+	return map;
 }
 
 QHash<int, QByteArray> MetaModel::roleNames() const
 {
 	QHash<int, QByteArray> roles;
 
-	roles[MetaNameRole] = "metaName";
+	roles[MetaNameRole] = "metaName";//257
 	roles[MetaValueRole] = "metaValue";
 
 	return roles;
