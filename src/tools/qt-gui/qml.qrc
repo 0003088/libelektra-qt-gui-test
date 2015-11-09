@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>BasicRectangle.qml</file>
-        <file>Indicator.qml</file>
+        <file>qml/BasicRectangle.qml</file>
+        <file>qml/Indicator.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/MainMenuBar.qml</file>
     </qresource>
 </RCC>

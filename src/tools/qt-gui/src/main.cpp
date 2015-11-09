@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	model.populateModel();
 
-	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+	engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 
 	return app.exec();
 }
