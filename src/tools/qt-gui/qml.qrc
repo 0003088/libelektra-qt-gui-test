@@ -4,5 +4,60 @@
         <file>qml/Indicator.qml</file>
         <file>qml/main.qml</file>
         <file>qml/MainMenuBar.qml</file>
+        <file>qml/MainToolBar.qml</file>
+        <file>qml/HelpArea.qml</file>
+        <file>qml/SearchField.qml</file>
+        <file>modeltest/dynamictreemodel.cpp</file>
+        <file>modeltest/dynamictreemodel.h</file>
+        <file>modeltest/modeltest.cpp</file>
+        <file>modeltest/modeltest.h</file>
+        <file>modeltest/tst_modeltest.cpp</file>
+        <file>qml/icons/application-exit.png</file>
+        <file>qml/icons/applications-system.png</file>
+        <file>qml/icons/arrow-right.png</file>
+        <file>qml/icons/color.png</file>
+        <file>qml/icons/dialog-cancel.png</file>
+        <file>qml/icons/dialog-close.png</file>
+        <file>qml/icons/dialog-error.png</file>
+        <file>qml/icons/dialog-information.png</file>
+        <file>qml/icons/dialog-ok.png</file>
+        <file>qml/icons/dialog-warning.png</file>
+        <file>qml/icons/document-close.png</file>
+        <file>qml/icons/document-new.png</file>
+        <file>qml/icons/edit-clear.png</file>
+        <file>qml/icons/edit-copy.png</file>
+        <file>qml/icons/edit-cut.png</file>
+        <file>qml/icons/edit-delete.png</file>
+        <file>qml/icons/edit-find.png</file>
+        <file>qml/icons/edit-paste.png</file>
+        <file>qml/icons/edit-redo.png</file>
+        <file>qml/icons/edit-rename.png</file>
+        <file>qml/icons/edit-undo.png</file>
+        <file>qml/icons/elektra-logo.png</file>
+        <file>qml/icons/export.png</file>
+        <file>qml/icons/go-next.png</file>
+        <file>qml/icons/go-previous.png</file>
+        <file>qml/icons/help-about.png</file>
+        <file>qml/icons/import.png</file>
+        <file>qml/icons/list-add.png</file>
+        <file>qml/icons/list-remove.png</file>
+        <file>qml/icons/mount.png</file>
+        <file>qml/icons/new-array.png</file>
+        <file>qml/icons/page-simple.png</file>
+        <file>qml/icons/unmount.png</file>
+        <file>qml/icons/view-refresh.png</file>
+        <file>qml/icons/whats_this.png</file>
+        <file>src/main.cpp</file>
+        <file>src/metaitem.cpp</file>
+        <file>src/metaitem.hpp</file>
+        <file>src/metamodel.cpp</file>
+        <file>src/metamodel.hpp</file>
+        <file>src/noleavesproxymodel.cpp</file>
+        <file>src/noleavesproxymodel.hpp</file>
+        <file>src/treeitem.cpp</file>
+        <file>src/treeitem.hpp</file>
+        <file>src/treemodel.cpp</file>
+        <file>src/treemodel.hpp</file>
+        <file>qml/GUIActions.qml</file>
     </qresource>
 </RCC>

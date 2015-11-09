@@ -6,6 +6,7 @@
 #include "treemodel.hpp"
 #include "noleavesproxymodel.hpp"
 #include "metamodel.hpp"
+#include "undomanager.hpp"
 //#include <modeltest.h>
 
 int main(int argc, char *argv[])
@@ -14,12 +15,15 @@ int main(int argc, char *argv[])
 
 	qRegisterMetaType<TreeModel>("TreeModel");
 	qRegisterMetaType<MetaModel>("MetaModel");
+	qRegisterMetaType<UndoManager>	("UndoManager");
 
 	QQmlApplicationEngine engine;
 	QQmlContext* ctxt = engine.rootContext();
 
 	TreeModel model;
 	NoLeavesProxyModel treeFilter;
+	UndoManager manager;
+
 	treeFilter.setSourceModel(&model);
 
 //	new ModelTest(&model, this);
@@ -28,6 +32,7 @@ int main(int argc, char *argv[])
 
 	ctxt->setContextProperty("treeModel", &model);
 	ctxt->setContextProperty("filteredTreeModel", &treeFilter);
+	ctxt->setContextProperty("undoManager", &manager);
 
 	model.populateModel();
 

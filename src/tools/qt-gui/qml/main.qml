@@ -13,18 +13,31 @@ ApplicationWindow {
 	visible: true
 	width: Screen.desktopAvailableWidth
 	height: Screen.desktopAvailableHeight
+
 	title: "Elektra Editor"
+
+	onClosing: {
+		if(!undoManager.isClean()){
+			close.accepted = false
+			exitDialog.open()
+		}
+		else
+			Qt.quit()
+	}
 
 	//**Properties*********************************************************************************************//
 
+	//Spacing & Margins recommended by KDE HIG
 	property int    defaultMargins: 8
 	property int    defaultSpacing: defaultMargins*0.5
+
 	property int    keyAreaHeight: Math.ceil(mainRow.height*0.7 - defaultSpacing)
 	property int    deltaKeyAreaHeight: Math.ceil(mainRow.height*0.5 - defaultSpacing)
 	property int    keyAreaWidth: Math.ceil(mainRow.width*0.7 - defaultSpacing)
 	property int    metaAreaHeight: Math.floor(mainRow.height*0.3)
 	property int    deltaMetaAreaHeight: Math.floor(mainRow.height*0.25 - defaultSpacing)
 	property int    searchResultsAreaHeight: Math.ceil(mainRow.height*0.25)
+	property bool	helpMode: false
 
 	//**Colors*************************************************************************************************//
 
@@ -41,15 +54,21 @@ ApplicationWindow {
 		colorGroup: SystemPalette.Disabled
 	}
 
+	//**Actions************************************************************************************************//
+
+	GUIActions {
+		id: guiActions
+	}
+
 	//**Menus & Toolbars***************************************************************************************//
 
 	menuBar: MainMenuBar {
 		id:mainMenuBar
 	}
 
-	//	toolBar: MainToolBar {
-	//		id:mainToolbar
-	//	}
+	toolBar: MainToolBar {
+		id:mainToolbar
+	}
 
 	statusBar: StatusBar {
 		id:mainStatusBar
