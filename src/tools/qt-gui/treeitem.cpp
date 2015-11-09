@@ -1,7 +1,7 @@
 #include "treeitem.hpp"
 #include <QDebug>
 
-TreeItem::TreeItem(const QString &baseName, const QString &name, const kdb::Key &key, TreeItem *parent)
+TreeItem::TreeItem(const QString &baseName, const QString &name, const kdb::Key &key, TreeItemPtr parent)
 	: m_baseName(baseName)
 	, m_name(name)
 	, m_key(key)
@@ -60,7 +60,7 @@ void TreeItem::setKey(const kdb::Key &key)
 	m_key = key;
 }
 
-QList<TreeItem *> TreeItem::children() const
+QList<TreeItemPtr> TreeItem::children() const
 {
 	return m_children;
 }
@@ -70,22 +70,22 @@ MetaModel *TreeItem::metaData() const
 	return m_metaData;
 }
 
-TreeItem *TreeItem::parent() const
+TreeItemPtr TreeItem::parent() const
 {
 	return m_parent;
 }
 
-void TreeItem::setParent(TreeItem *parent)
+void TreeItem::setParent(TreeItemPtr parent)
 {
 	m_parent = parent;
 }
 
-TreeItem* TreeItem::child(int row) const
+TreeItemPtr TreeItem::child(int row) const
 {
 	if(row < m_children.count())
 		return m_children.at(row);
 
-	return NULL;//TODO
+	return TreeItemPtr();
 }
 
 int TreeItem::childCount() const
@@ -101,7 +101,7 @@ int TreeItem::columnCount() const
 int TreeItem::row() const
 {
 	if (m_parent)
-		return m_parent->m_children.indexOf(const_cast<TreeItem*>(this));
+		return m_parent->m_children.indexOf(TreeItemPtr(const_cast<TreeItem*>(this)));
 
 	return 0;
 }
@@ -110,7 +110,7 @@ bool TreeItem::hasChild(const QString& name) const
 {
 	if(childCount() > 0)
 	{
-		foreach (TreeItem* node, m_children)
+		foreach (TreeItemPtr node, m_children)
 		{
 			if (node->baseName() == name)
 			{
@@ -124,11 +124,11 @@ bool TreeItem::hasChild(const QString& name) const
 	return false;
 }
 
-TreeItem* TreeItem::getChildByName(QString& name) const
+TreeItemPtr TreeItem::getChildByName(QString& name) const
 {
 	if(childCount() > 0)
 	{
-		foreach (TreeItem* node, m_children)
+		foreach (TreeItemPtr node, m_children)
 		{
 			if (node->baseName() == name)
 			{
@@ -139,7 +139,7 @@ TreeItem* TreeItem::getChildByName(QString& name) const
 
 	}
 
-	return NULL;//TODO
+	return TreeItemPtr();
 }
 
 bool TreeItem::isDirty() const
@@ -149,7 +149,7 @@ bool TreeItem::isDirty() const
 
 bool TreeItem::childrenAreLeaves() const
 {
-	foreach(TreeItem *item, m_children)
+	foreach(TreeItemPtr item, m_children)
 	{
 		if(item->childCount() > 0)
 			return false;
@@ -163,9 +163,9 @@ void TreeItem::setIsDirty(bool value)
 	m_isDirty = value;
 }
 
-void TreeItem::appendChild(TreeItem* node)
+void TreeItem::appendChild(TreeItemPtr child)
 {
-	m_children.append(node);
+	m_children.append(child);
 }
 
 void TreeItem::clear()

@@ -9,7 +9,7 @@ using namespace kdb;
 
 TreeModel::TreeModel(QObject *parent) : QAbstractItemModel(parent)
 {
-	m_rootItem = new TreeItem("root", "root", 0, 0);
+	m_rootItem = TreeItemPtr(new TreeItem("root", "root", 0, TreeItemPtr(NULL)));
 }
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -17,12 +17,11 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
 	if (!hasIndex(row, column, parent))
 		return QModelIndex();
 
-	TreeItem *parentItem = getItem(parent);
-
-	TreeItem *childItem = parentItem->child(row);
+	TreeItem* parentItem = getItem(parent);
+	TreeItemPtr childItem = parentItem->child(row);
 
 	if (childItem)
-		return createIndex(row, column, childItem);
+		return createIndex(row, column, childItem.data());
 	else
 		return QModelIndex();
 }
@@ -32,18 +31,18 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 	if (!index.isValid())
 		return QModelIndex();
 
-	TreeItem *childItem = getItem(index);
-	TreeItem *parentItem = childItem->parent();
+	TreeItem* childItem = getItem(index);
+	TreeItemPtr parentItem = childItem->parent();
 
 	if(parentItem == m_rootItem)
 		return QModelIndex();
 
-	return createIndex(parentItem->childCount(), 0, parentItem);
+	return createIndex(parentItem->childCount(), 0, parentItem.data());
 }
 
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
-	TreeItem *parentItem = getItem(parent);
+	TreeItem* parentItem = getItem(parent);
 
 	return parentItem->childCount();
 }
@@ -60,7 +59,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		return QVariant();
 	}
 
-	TreeItem *item = getItem(index);
+	TreeItem* item = getItem(index);
 
 	switch (role)
 	{
@@ -128,24 +127,24 @@ void TreeModel::populateModel(KeySet const & keySet)
 	for (int i=KEY_NS_FIRST; i<=KEY_NS_LAST; ++i)
 	{
 		elektraNamespace ns = static_cast<elektraNamespace>(i);
-		TreeItem* toAdd;
+		TreeItemPtr toAdd;
 
 		switch (ns)
 		{
 		case KEY_NS_SPEC:
-			toAdd = new TreeItem("spec", "spec", 0, m_rootItem);
+			toAdd = TreeItemPtr(new TreeItem("spec", "spec", 0, m_rootItem));
 			break;
 		case KEY_NS_PROC:
 			// TODO: add generic commandline parsing
 			break;
 		case KEY_NS_DIR:
-			toAdd = new TreeItem("dir", "dir", 0, m_rootItem);
+			toAdd = TreeItemPtr(new TreeItem("dir", "dir", 0, m_rootItem));
 			break;
 		case KEY_NS_USER:
-			toAdd = new TreeItem("user", "user", 0, m_rootItem);
+			toAdd = TreeItemPtr(new TreeItem("user", "user", 0, m_rootItem));
 			break;
 		case KEY_NS_SYSTEM:
-			toAdd = new TreeItem("system", "system", 0, m_rootItem);
+			toAdd = TreeItemPtr(new TreeItem("system", "system", 0, m_rootItem));
 			break;
 		case KEY_NS_EMPTY:
 			break;
@@ -184,7 +183,7 @@ void TreeModel::createNewNodes(KeySet keySet)
 	}
 }
 
-void TreeModel::sink(TreeItem *item, QStringList keys, const Key& key)
+void TreeModel::sink(TreeItemPtr item, QStringList keys, const Key& key)
 {
 	if (keys.length() == 0)
 		return;
@@ -202,12 +201,12 @@ void TreeModel::sink(TreeItem *item, QStringList keys, const Key& key)
 		//		if(item->hasChild(name))
 		//			item->children()->removeRow(item->getChildIndexByName(name));//TODO
 
-		TreeItem* newNode;
+		TreeItemPtr newNode;
 
 		if(isLeaf)
-			newNode = new TreeItem(baseName, (item->name() + "/" + baseName), key, item);
+			newNode = TreeItemPtr(new TreeItem(baseName, (item->name() + "/" + baseName), key, item));
 		else
-			newNode = new TreeItem(baseName, (item->name() + "/" + baseName), NULL, item);
+			newNode = TreeItemPtr(new TreeItem(baseName, (item->name() + "/" + baseName), NULL, item));
 
 		item->appendChild(newNode);
 
@@ -227,15 +226,16 @@ QStringList TreeModel::getSplittedKeyname(const Key &key)
 	return names;
 }
 
-TreeItem *TreeModel::getItem(const QModelIndex &index) const
+TreeItem* TreeModel::getItem(const QModelIndex &index) const
 {
 	if (index.isValid()) {
-		TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+		TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
+
 		if (item)
 			return item;
 	}
 
-	return m_rootItem;
+	return m_rootItem.data();
 }
 
 QHash<int, QByteArray> TreeModel::roleNames() const
