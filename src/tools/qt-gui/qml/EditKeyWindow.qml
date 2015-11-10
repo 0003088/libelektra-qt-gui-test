@@ -6,10 +6,10 @@ KeyWindow {
 
 	keyName: selectedNode === null || treeModel.data(selectedNode, 257) === undefined ? "" : treeModel.data(selectedNode, 257)
 	keyValue: selectedNode === null || treeModel.data(selectedNode, 259) === undefined ? "" : treeModel.data(selectedNode, 259)
+	metaData: treeModel.data(selectedNode, 266)
 
 	function populateMetaArea() {
-		var metaData = treeModel.data(selectedNode, 266)
-
+//		var metaData = treeModel.data(selectedNode, 266)
 		if(metaData){
 			for(var i = 0; i < metaData.rowCount(); i++){
 				qmlMetaKeyModel.append({"metaName":  metaData.get(i).metaName, "metaValue":  metaData.get(i).metaValue})
@@ -18,7 +18,7 @@ KeyWindow {
 	}
 
 	function editAccepted() {
-
+		console.log(selectedNode)
 		var newMetaData = {}
 		console.log("1")
 //		if(accessFromSearchResults)
@@ -39,7 +39,7 @@ KeyWindow {
 			console.log("2b")
 			container.setOldValue(keyValue.toString())
 			console.log("2c")
-			container.setOldMetadata(treeModel.data(selectedNode, 266))
+			container.setOldMetadata(metaData)
 			console.log("2d")
 
 			container.setNewName(nameTextField.text)
@@ -66,6 +66,7 @@ KeyWindow {
 			accessFromSearchResults = false
 			nameTextField.readOnly = false
 			nameTextField.textColor = activePalette.text
+			metaData = null
 
 			qmlMetaKeyModel.clear()
 			console.log("5")

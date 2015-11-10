@@ -7,6 +7,7 @@ QString DataContainer::oldName() const
 
 void DataContainer::setOldName(const QString &name)
 {
+	qDebug() << name;
 	m_oldName = name;
 }
 
@@ -17,6 +18,7 @@ QString DataContainer::oldValue() const
 
 void DataContainer::setOldValue(const QString &value)
 {
+	qDebug() << value;
 	m_oldValue = value;
 }
 
@@ -39,6 +41,7 @@ void DataContainer::setOldMetadata(MetaModel *metadata)
 	}
 
 	m_oldMetadata = oldMDMap;
+	qDebug() << "Map " << m_oldMetadata;
 }
 
 QString DataContainer::newName() const

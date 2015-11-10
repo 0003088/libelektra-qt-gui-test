@@ -126,7 +126,8 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
 
 	case MetaDataRole:
 	{
-		item->setMetaData(value.toList());
+		qDebug() << "QAvriant" << value;
+		item->setMetaData(value.toMap());
 		break;
 	}
 

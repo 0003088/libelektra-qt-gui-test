@@ -50,11 +50,11 @@ void TreeItem::setValue(const QVariant &value)
 	m_value = value;
 }
 
-void TreeItem::setMetaData(const QVariantList &metaData)
+void TreeItem::setMetaData(const QVariantMap &metaData)
 {
-	for(int i = 0; i < metaData.count()-1; i++)
-	{
-		MetaItem* metaItem = new MetaItem(metaData.at(i).toString(), metaData.at(i+1));
+	qDebug() << "List" << metaData;
+	for(QVariantMap::const_iterator iter = metaData.begin(); iter != metaData.end(); iter++) {
+		MetaItem* metaItem = new MetaItem(iter.key(), iter.value());
 		m_metaData->insertRow(m_metaData->rowCount(), metaItem);
 	}
 }

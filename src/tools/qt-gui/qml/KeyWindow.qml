@@ -23,6 +23,7 @@ BasicWindow {
 	property string keyValue: ""
 	property bool   isEdited: false
 	property var    selectedNode: null
+	property var	metaData: null
 //	property bool   accessFromSearchResults: false
 
 	onClosing: cancelClicked()
