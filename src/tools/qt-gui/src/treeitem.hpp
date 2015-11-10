@@ -33,6 +33,7 @@ public:
 	void								setBaseName(const QString &baseName);
 	void								setName(const QString &name);
 	void								setValue(const QVariant &value);
+	void								setMetaData(const QVariantList &metaData);
 	void								setKey(const kdb::Key &key);
 	void								setParent(QSharedPointer<TreeItem> parent);
 	void								populateMetaModel();

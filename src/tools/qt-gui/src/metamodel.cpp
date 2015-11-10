@@ -58,6 +58,11 @@ QVariantMap MetaModel::get(const int& idx) const
 	return map;
 }
 
+QList<MetaItem *> MetaModel::children() const
+{
+	return m_model;
+}
+
 QHash<int, QByteArray> MetaModel::roleNames() const
 {
 	QHash<int, QByteArray> roles;

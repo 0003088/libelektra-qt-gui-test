@@ -25,6 +25,7 @@ public:
 	void											insertRow(int row, MetaItem *item);
 	QHash<int, QByteArray>							roleNames() const;
 	Q_INVOKABLE				QVariantMap				get(const int &idx) const;
+	QList<MetaItem*>								children() const;
 
 private:
 	QList<MetaItem*> m_model;

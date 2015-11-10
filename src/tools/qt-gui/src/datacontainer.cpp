@@ -28,18 +28,17 @@ QVariantMap DataContainer::oldMetadata() const
 void DataContainer::setOldMetadata(MetaModel *metadata)
 {
 	//convert TreeViewModel to QVariantMap
-//	QVariantMap oldMDMap;
+	QVariantMap oldMDMap;
 
-//	if(metadata)
-//	{
-//		foreach (ConfigNodePtr node, metadata->model())
-//		{
-//			oldMDMap.insert(node->getName(), node->getValue());
-//		}
+	if(metadata)
+	{
+		foreach (MetaItem* item, metadata->children())
+		{
+			oldMDMap.insert(item->metaName(), item->metaValue());
+		}
+	}
 
-//	}
-
-//	m_oldMetadata = oldMDMap;
+	m_oldMetadata = oldMDMap;
 }
 
 QString DataContainer::newName() const

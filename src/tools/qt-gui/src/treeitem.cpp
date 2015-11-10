@@ -50,6 +50,15 @@ void TreeItem::setValue(const QVariant &value)
 	m_value = value;
 }
 
+void TreeItem::setMetaData(const QVariantList &metaData)
+{
+	for(int i = 0; i < metaData.count()-1; i++)
+	{
+		MetaItem* metaItem = new MetaItem(metaData.at(i).toString(), metaData.at(i+1));
+		m_metaData->insertRow(m_metaData->rowCount(), metaItem);
+	}
+}
+
 kdb::Key TreeItem::key() const
 {
 	return m_key;
@@ -182,11 +191,7 @@ void TreeItem::populateMetaModel()
 
 		while (m_key.nextMeta())
 		{
-			MetaItem* item = new MetaItem;
-
-			item->setMetaName(QString::fromStdString(m_key.currentMeta().getName()));
-			item->setMetaValue(QVariant::fromValue(QString::fromStdString(m_key.currentMeta().getString())));
-
+			MetaItem* item = new MetaItem(QString::fromStdString(m_key.currentMeta().getName()), QVariant::fromValue(QString::fromStdString(m_key.currentMeta().getString())));
 			m_metaData->insertRow(m_metaData->rowCount(), item);
 		}
 	}

@@ -104,7 +104,36 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
 bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+	if (!index.isValid())
+		return false;
 
+	TreeItem* item = getItem(index);
+
+	switch (role)
+	{
+	case BaseNameRole:
+		if(item->baseName() != value.toString()){
+			item->setBaseName(value.toString());
+			item->setIsDirty(true);
+		}
+		break;
+
+	case ValueRole:
+		if(item->value() != value){
+			item->setValue(value);
+		}
+		break;
+
+	case MetaDataRole:
+	{
+		item->setMetaData(value.toList());
+		break;
+	}
+
+		emit dataChanged(index, index);
+
+		return true;
+	}
 }
 
 void TreeModel::populateModel()
@@ -242,6 +271,14 @@ TreeItem* TreeModel::getItem(const QModelIndex &index) const
 	}
 
 	return m_rootItem.data();
+}
+
+Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
+{
+	if (!index.isValid())
+		return Qt::ItemIsEnabled;
+
+	return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 }
 
 QHash<int, QByteArray> TreeModel::roleNames() const

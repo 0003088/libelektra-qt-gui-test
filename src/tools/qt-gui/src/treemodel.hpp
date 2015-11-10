@@ -49,6 +49,8 @@ public:
 
 	QStringList				getSplittedKeyname(const kdb::Key &key);
 
+	Qt::ItemFlags			flags(const QModelIndex &index) const;
+
 private:
 	TreeItemPtr				m_rootItem;
 	kdb::KDB				m_kdb;

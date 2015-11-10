@@ -7,7 +7,7 @@
 class MetaItem
 {
 public:
-	MetaItem();
+	explicit MetaItem(const QString& metaName, const QVariant& metaValue);
 
 	QString		metaName() const;
 	QVariant	metaValue() const;
