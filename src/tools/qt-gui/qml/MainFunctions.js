@@ -77,21 +77,23 @@ function paste() {
 }
 
 //deletes key when delete key command for a key without children is executed
-function deleteKey() {
+function deleteKey(index) {
 
-	var cr = keyAreaView.currentRow
+	undoManager.createDeleteKeyCommand(treeModel, index)
 
-	undoManager.createDeleteKeyCommand("deleteKey", keyAreaSelectedItem.parentModel, keyAreaSelectedItem.index)
+//	var cr = keyAreaView.currentRow
 
-	if(keyAreaView.rowCount > 0 && cr > 0){
-		keyAreaView.currentRow = Math.min(cr-1, keyAreaView.rowCount - 1)
-		updateKeyAreaSelection()
-	}
-	else{
-		keyAreaSelectedItem = null
-		keyAreaView.selection.clear()
-		treeView.treeModel.refresh()
-	}
+//	undoManager.createDeleteKeyCommand("deleteKey", keyAreaSelectedItem.parentModel, keyAreaSelectedItem.index)
+
+//	if(keyAreaView.rowCount > 0 && cr > 0){
+//		keyAreaView.currentRow = Math.min(cr-1, keyAreaView.rowCount - 1)
+//		updateKeyAreaSelection()
+//	}
+//	else{
+//		keyAreaSelectedItem = null
+//		keyAreaView.selection.clear()
+//		treeView.treeModel.refresh()
+//	}
 }
 
 //deletes key when delete key command for a key with children is executed

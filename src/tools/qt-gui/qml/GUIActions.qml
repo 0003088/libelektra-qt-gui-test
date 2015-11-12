@@ -25,6 +25,54 @@ Item {
 	property alias chooseColorAction: chooseColorAction
 
 	Action {
+		id: editAction
+
+		iconSource: "icons/edit-rename.png"
+		text: qsTr("Edit ...")
+		tooltip: qsTr("Edit")
+		enabled: treeView.selection.hasSelection || keyAreaView.selection.hasSelection || searchResultsView.selection.hasSelection
+
+		onTriggered: {
+			if(searchResultsView.selection.hasSelection){
+				editKeyWindow.selectedNode = searchResultsView.currentIndex
+			}
+			else if(keyAreaView.selection.hasSelection) {
+				editKeyWindow.selectedNode = keyAreaView.currentIndex
+			}
+			else if(treeView.selection.hasSelection) {
+				editKeyWindow.selectedNode = filteredTreeModel.mapToSource(treeView.currentIndex)
+			}
+
+			editKeyWindow.populateMetaArea()
+			editKeyWindow.show()
+		}
+	}
+
+	Action {
+		id:deleteAction
+
+		text: qsTr("Delete")
+		iconSource: "icons/document-close.png"
+		tooltip: qsTr("Delete")
+		shortcut: StandardKey.Delete
+		enabled: !(treeView.selection.hasSelection && keyAreaView.selection.hasSelection && searchResultsView.selection.hasSelection)
+		onTriggered: {
+			if(searchResultsView.selection.hasSelection){
+				undoManager.createDeleteKeyCommand(treeModel, searchResultsView.currentIndex)
+				searchResultsView.selection.clear()
+			}
+			else if(keyAreaView.selection.hasSelection) {
+				undoManager.createDeleteKeyCommand(treeModel, keyAreaView.currentIndex)
+				keyAreaView.selection.clear()
+			}
+			else if(treeView.selection.hasSelection) {
+				undoManager.createDeleteKeyCommand(treeModel, filteredTreeModel.mapToSource(treeView.currentIndex))
+				treeView.selection.clear()
+			}
+		}
+	}
+
+	Action {
 		id: newKeyAction
 
 		text: qsTr("&Key ...")
@@ -65,24 +113,6 @@ Item {
 	}
 
 	Action {
-		id:deleteAction
-
-		text: qsTr("Delete")
-		iconSource: "icons/document-close.png"
-		tooltip: qsTr("Delete")
-		shortcut: StandardKey.Delete
-		enabled: false//!(searchResultsSelectedItem === null && treeView.currentNode === null && keyAreaSelectedItem === null)
-		onTriggered: {
-			if(searchResultsSelectedItem !== null)
-				MFunctions.deleteSearchResult()
-			else if(treeView.currentNode !== null && keyAreaSelectedItem === null)
-				MFunctions.deleteBranch(treeView)
-			else if(treeView.currentNode !== null && keyAreaSelectedItem !== null)
-				MFunctions.deleteKey()
-		}
-	}
-
-	Action {
 		id: importAction
 
 		text: qsTr("&Import Configuration ... ")
@@ -114,47 +144,48 @@ Item {
 		shortcut: StandardKey.Undo
 		enabled: undoManager.canUndo
 		onTriggered: {
-			if(undoManager.undoText === "deleteBranch"){
-				undoManager.undo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.undoText === "deleteKey"){
-				undoManager.undo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.undoText === "deleteSearchResultsKey" || undoManager.undoText === "deleteSearchResultsBranch"){
-				undoManager.undo()
-				undoManager.undo()
-			}
-			else if(undoManager.undoText === "copyBranch"){
-				undoManager.undo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.undoText === "cutBranch"){
-				undoManager.undo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.undoText === "import"){
-				undoManager.undo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.undoText === "newBranch"){
-				undoManager.undo()
-				treeView.treeModel.refresh()
-				keyAreaView.selection.clear()
-			}
-			else if(undoManager.undoText === "newKey"){
-				undoManager.undo()
-				keyAreaView.selection.clear()
-				keyAreaView.currentRow = -1
-			}
-			else{
-				undoManager.undo()
-				if(searchResultsListView.model !== null && searchResultsListView.model !== undefined)
-					searchResultsListView.model.refresh()
-			}
+			undoManager.undo()
+//			if(undoManager.undoText === "deleteBranch"){
+//				undoManager.undo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.undoText === "deleteKey"){
+//				undoManager.undo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.undoText === "deleteSearchResultsKey" || undoManager.undoText === "deleteSearchResultsBranch"){
+//				undoManager.undo()
+//				undoManager.undo()
+//			}
+//			else if(undoManager.undoText === "copyBranch"){
+//				undoManager.undo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.undoText === "cutBranch"){
+//				undoManager.undo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.undoText === "import"){
+//				undoManager.undo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.undoText === "newBranch"){
+//				undoManager.undo()
+//				treeView.treeModel.refresh()
+//				keyAreaView.selection.clear()
+//			}
+//			else if(undoManager.undoText === "newKey"){
+//				undoManager.undo()
+//				keyAreaView.selection.clear()
+//				keyAreaView.currentRow = -1
+//			}
+//			else{
+//				undoManager.undo()
+//				if(searchResultsListView.model !== null && searchResultsListView.model !== undefined)
+//					searchResultsListView.model.refresh()
+//			}
 
-			treeView.updateIndicator()
+//			treeView.updateIndicator()
 		}
 
 	}
@@ -272,30 +303,6 @@ Item {
 			unmountBackendWindow.mountedBackendsView.model = treeView.treeModel.mountedBackends()
 			unmountBackendWindow.mountedBackendsView.currentIndex = -1
 			unmountBackendWindow.show()
-		}
-	}
-
-	Action {
-		id: editAction
-
-		iconSource: "icons/edit-rename.png"
-		text: qsTr("Edit ...")
-		tooltip: qsTr("Edit")
-		enabled: treeView.selection.hasSelection || keyAreaView.selection.hasSelection || searchResultsView.selection.hasSelection
-
-		onTriggered: {
-			if(searchResultsView.selection.hasSelection){
-				editKeyWindow.selectedNode = searchResultsView.currentIndex
-			}
-			else if(keyAreaView.selection.hasSelection) {
-				editKeyWindow.selectedNode = keyAreaView.currentIndex
-			}
-			else if(treeView.selection.hasSelection) {
-				editKeyWindow.selectedNode = filteredTreeModel.mapToSource(treeView.currentIndex)
-			}
-
-			editKeyWindow.populateMetaArea()
-			editKeyWindow.show()
 		}
 	}
 

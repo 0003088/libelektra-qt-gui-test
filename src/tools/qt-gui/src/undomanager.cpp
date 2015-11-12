@@ -1,7 +1,7 @@
 #include <QUndoStack>
 #include "undomanager.hpp"
 #include "editkeycommand.hpp"
-//#include "deletekeycommand.hpp"
+#include "deletekeycommand.hpp"
 //#include "newkeycommand.hpp"
 //#include "copykeycommand.hpp"
 //#include "cutkeycommand.hpp"
@@ -35,9 +35,9 @@ void UndoManager::createEditKeyCommand(TreeModel* model, const QModelIndex &inde
 	m_undoStack->push(new EditKeyCommand(model, index, data));
 }
 
-void UndoManager::createDeleteKeyCommand(const QString& type, const QModelIndex &index)
+void UndoManager::createDeleteKeyCommand(TreeModel* model, const QModelIndex &index)
 {
-//	m_undoStack->push(new DeleteKeyCommand(type, model, idx));
+	m_undoStack->push(new DeleteKeyCommand(model, index));
 }
 
 void UndoManager::createNewKeyCommand(const QModelIndex &index, DataContainer* data, bool isBelow)

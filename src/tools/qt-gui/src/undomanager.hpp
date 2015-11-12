@@ -103,7 +103,7 @@ public:
 	 * @param model The TreeViewModel of the deleted ConfigNode.
 	 * @param idx The index of the deleted ConfigNode.
 	 */
-	Q_INVOKABLE void	createDeleteKeyCommand(const QString& type, const QModelIndex &index);
+	Q_INVOKABLE void	createDeleteKeyCommand(TreeModel* model, const QModelIndex &index);
 
 	/**
 	 * @brief Create a new NewKeyCommand.

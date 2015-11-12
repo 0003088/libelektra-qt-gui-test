@@ -72,5 +72,11 @@
         <file>qml/MainFunctions.js</file>
         <file>src/editkeycommand.cpp</file>
         <file>src/editkeycommand.hpp</file>
+        <file>src/datacontainer.cpp</file>
+        <file>src/datacontainer.hpp</file>
+        <file>src/deletekeycommand.cpp</file>
+        <file>src/deletekeycommand.hpp</file>
+        <file>src/undomanager.cpp</file>
+        <file>src/undomanager.hpp</file>
     </qresource>
 </RCC>

@@ -39,6 +39,8 @@ public:
 	QVariant				data(const QModelIndex &index, int role) const;
 
 	bool					setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+	bool					insertRow(int row, const QModelIndex &parent, TreeItemPtr item, bool addParent = true);
+	bool					removeRow(int row, const QModelIndex &parent);
 
 	QHash<int, QByteArray>	roleNames() const;
 

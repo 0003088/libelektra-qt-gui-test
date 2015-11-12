@@ -299,3 +299,23 @@ void TreeItem::updateNode(const Key& key)
 	setValue();
 	populateMetaModel();
 }
+
+bool TreeItem::insertChild(int index, TreeItemPtr item)
+{
+	if (index < 0 || index > m_children.count())
+		return false;
+
+	m_children.insert(index, item);
+
+	return true;
+}
+
+bool TreeItem::removeChild(int index)
+{
+	if (index < 0 || index > m_children.count())
+		return false;
+
+	m_children.removeAt(index);
+
+	return true;
+}

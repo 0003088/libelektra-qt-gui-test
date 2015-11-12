@@ -99,7 +99,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
 	case ItemRole:{
 		QQmlApplicationEngine::setObjectOwnership(item, QQmlApplicationEngine::CppOwnership);
-		return QVariant::fromValue(item);
+		return QVariant::fromValue(TreeItemPtr(item));
 	}
 
 	default:
@@ -276,6 +276,33 @@ TreeItem* TreeModel::getItem(const QModelIndex &index) const
 	}
 
 	return m_rootItem.data();
+}
+
+bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, bool addParent)
+{
+	TreeItem *parentItem = getItem(parent);
+	bool success;
+
+	if(addParent)
+		item->setParent(TreeItemPtr(parentItem));
+
+	beginInsertRows(parent, row, row);
+	success = parentItem->insertChild(row, item);
+	endInsertRows();
+
+	return success;
+}
+
+bool TreeModel::removeRow(int row, const QModelIndex &parent)
+{
+	TreeItem *parentItem = getItem(parent);
+	bool success = true;
+
+	beginRemoveRows(parent, row, row);
+	success = parentItem->removeChild(row);
+	endRemoveRows();
+
+	return success;
 }
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
