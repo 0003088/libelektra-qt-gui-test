@@ -18,9 +18,7 @@ KeyWindow {
 	}
 
 	function editAccepted() {
-		console.log(selectedNode)
 		var newMetaData = {}
-		console.log("1")
 //		if(accessFromSearchResults)
 //			index = selectedNode.parentModel.getIndexByName(selectedNode.name)
 //		else
@@ -30,33 +28,25 @@ KeyWindow {
 		for(var i = 0; i < qmlMetaKeyModel.count; i++){
 			newMetaData[qmlMetaKeyModel.get(i).metaName] = qmlMetaKeyModel.get(i).metaValue
 		}
-		console.log("2")
 		//create undo command
 		if(isEdited){
 			container.clearData()
-			console.log("2a")
+
 			container.setOldName(keyName.toString())
-			console.log("2b")
 			container.setOldValue(keyValue.toString())
-			console.log("2c")
 			container.setOldMetadata(metaData)
-			console.log("2d")
 
 			container.setNewName(nameTextField.text)
-			console.log("2e")
 			container.setNewValue(valueTextField.text)
-			console.log("2f")
 			container.setNewMetadata(newMetaData)
-			console.log("2g")
 
 			undoManager.createEditKeyCommand(treeModel, selectedNode, container)
-			console.log("2h")
 		}
-		console.log("3")
+
 		if(true){//!error){//TODO
 			qmlMetaKeyModel.clear()
 			selectedNode = null
-			console.log("4")
+
 //			if(accessFromSearchResults){
 //				searchResultsListView.model.refresh()
 //				searchResultsSelectedItem = searchResultsListView.model.get(searchResultsListView.currentIndex)
@@ -69,7 +59,6 @@ KeyWindow {
 			metaData = null
 
 			qmlMetaKeyModel.clear()
-			console.log("5")
 //			if(keyAreaView.model !== null && !accessFromSearchResults){
 //				keyAreaSelectedItem = keyAreaView.model.get(keyAreaView.currentRow)
 //			}

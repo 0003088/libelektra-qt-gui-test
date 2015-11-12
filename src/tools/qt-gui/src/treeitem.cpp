@@ -1,11 +1,15 @@
 #include "treeitem.hpp"
+#include <QtQml>
 #include <QDebug>
+
+using namespace kdb;
 
 TreeItem::TreeItem(const QString &baseName, const QString &name, const kdb::Key &key, TreeItemPtr parent)
 	: m_baseName(baseName)
 	, m_name(name)
 	, m_key(key)
 	, m_parent(parent)
+	, m_metaData(NULL)
 	, m_isDirty(false)
 {
 	if (m_key && m_key.isString())
@@ -27,6 +31,27 @@ QString TreeItem::baseName() const
 
 void TreeItem::setBaseName(const QString &baseName)
 {
+	int index = m_name.lastIndexOf("/");
+
+	if(index != -1)
+	{
+		m_name.replace(index, m_name.length() - index, "/" + baseName);
+	}
+
+	if(!m_key)
+		m_key = Key(m_name.toStdString(), KEY_END);
+	else
+		m_key = m_key.dup();
+
+	try{
+		if(m_key.getBaseName().compare(baseName.toStdString()) != 0)
+			m_key.setBaseName(baseName.toStdString());
+	}
+	catch(KeyInvalidName const& ex){
+		emit showMessage(tr("Error"), tr("Could not set name because Keyname \"%1\" is invalid.").arg(name), ex.what());
+		return;
+	}
+
 	m_baseName = baseName;
 }
 
@@ -52,7 +77,13 @@ void TreeItem::setValue(const QVariant &value)
 
 void TreeItem::setMetaData(const QVariantMap &metaData)
 {
-	qDebug() << "List" << metaData;
+	if(!m_metaData)
+	{
+		m_metaData = new MetaModel;
+	}
+
+	m_metaData->clear();
+
 	for(QVariantMap::const_iterator iter = metaData.begin(); iter != metaData.end(); iter++) {
 		MetaItem* metaItem = new MetaItem(iter.key(), iter.value());
 		m_metaData->insertRow(m_metaData->rowCount(), metaItem);

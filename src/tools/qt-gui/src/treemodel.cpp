@@ -1,4 +1,5 @@
 #include "treemodel.hpp"
+#include <QtQml>
 #include <kdbproposal.h> // for namespaces
 #include <kdbconfig.h> // for DEBUG and VERBOSE
 
@@ -91,11 +92,15 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		return QVariant::fromValue(true);
 	}
 
-	case MetaDataRole:
+	case MetaDataRole:{
+		QQmlApplicationEngine::setObjectOwnership(item->metaData(), QQmlApplicationEngine::CppOwnership);
 		return QVariant::fromValue(item->metaData());
+	}
 
-	case ItemRole:
+	case ItemRole:{
+		QQmlApplicationEngine::setObjectOwnership(item, QQmlApplicationEngine::CppOwnership);
 		return QVariant::fromValue(item);
+	}
 
 	default:
 		return QVariant();
@@ -126,7 +131,6 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
 
 	case MetaDataRole:
 	{
-		qDebug() << "QAvriant" << value;
 		item->setMetaData(value.toMap());
 		break;
 	}
@@ -264,7 +268,7 @@ QStringList TreeModel::getSplittedKeyname(const Key &key)
 
 TreeItem* TreeModel::getItem(const QModelIndex &index) const
 {
-	if (index.isValid()) {
+	if(index.isValid()) {
 		TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
 
 		if (item)
