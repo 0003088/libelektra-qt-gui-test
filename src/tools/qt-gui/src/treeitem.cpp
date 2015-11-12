@@ -12,16 +12,46 @@ TreeItem::TreeItem(const QString &baseName, const QString &name, const kdb::Key 
 	, m_metaData(NULL)
 	, m_isDirty(false)
 {
-	if (m_key && m_key.isString())
-		m_value = QVariant::fromValue(QString::fromStdString(m_key.getString()));
-	else if (m_key && m_key.isBinary())
-		m_value = QVariant::fromValue(QString::fromStdString(m_key.getBinary()));
+	setValue();
 
 	if(m_key)
 	{
-		m_metaData = new MetaModel;
+		m_metaData = new MetaModel(m_key);
 		populateMetaModel();
 	}
+}
+
+TreeItem::TreeItem(const TreeItem &other)
+	: QObject()
+	, m_baseName(other.m_baseName)
+	, m_name(other.m_name)
+	, m_key(other.key().dup())
+	, m_parent(NULL)
+	, m_value(other.m_value)
+	, m_metaData(NULL)
+	, m_isDirty(false)
+{
+	if(other.m_children.count() > 0)
+	{
+		foreach(TreeItemPtr item, other.m_children)
+		{
+			m_children.append(TreeItemPtr(new TreeItem(*item)));
+		}
+	}
+
+	if(other.m_metaData)
+	{
+		m_metaData = new MetaModel(m_key);
+		foreach(MetaItem* item , other.m_metaData->children())
+		{
+			m_metaData->insertRow(m_metaData->rowCount(), new MetaItem(*item));
+		}
+	}
+}
+
+TreeItem::~TreeItem()
+{
+	delete m_metaData;
 }
 
 QString TreeItem::baseName() const
@@ -48,7 +78,7 @@ void TreeItem::setBaseName(const QString &baseName)
 			m_key.setBaseName(baseName.toStdString());
 	}
 	catch(KeyInvalidName const& ex){
-		emit showMessage(tr("Error"), tr("Could not set name because Keyname \"%1\" is invalid.").arg(name), ex.what());
+		//		emit showMessage(tr("Error"), tr("Could not set name because Keyname \"%1\" is invalid.").arg(name), ex.what());
 		return;
 	}
 
@@ -63,6 +93,15 @@ QString TreeItem::name() const
 void TreeItem::setName(const QString &name)
 {
 	m_name = name;
+
+	setKeyName(name);
+
+	if(m_children.count() > 0)
+	{
+		foreach(TreeItemPtr item, m_children){
+			item->setName(m_name + "/" + item->baseName());
+		}
+	}
 }
 
 QVariant TreeItem::value() const
@@ -72,22 +111,24 @@ QVariant TreeItem::value() const
 
 void TreeItem::setValue(const QVariant &value)
 {
-	m_value = value;
+	if(!m_key)
+		m_key = Key(m_name.toStdString(), KEY_END);
+	else
+		m_key = m_key.dup();
+
+	if(m_key.getString().compare(value.toString().toStdString()) != 0)
+	{
+		m_key.setString(value.toString().toStdString());
+		m_value = value;
+	}
 }
 
 void TreeItem::setMetaData(const QVariantMap &metaData)
 {
 	if(!m_metaData)
-	{
-		m_metaData = new MetaModel;
-	}
+		m_metaData = new MetaModel(m_key);
 
-	m_metaData->clear();
-
-	for(QVariantMap::const_iterator iter = metaData.begin(); iter != metaData.end(); iter++) {
-		MetaItem* metaItem = new MetaItem(iter.key(), iter.value());
-		m_metaData->insertRow(m_metaData->rowCount(), metaItem);
-	}
+	m_metaData->setMetaData(metaData);
 }
 
 kdb::Key TreeItem::key() const
@@ -228,3 +269,33 @@ void TreeItem::populateMetaModel()
 	}
 }
 
+void TreeItem::setValue()
+{
+	if (m_key && m_key.isString())
+		m_value = QVariant::fromValue(QString::fromStdString(m_key.getString()));
+	else if (m_key && m_key.isBinary())
+		m_value = QVariant::fromValue(QString::fromStdString(m_key.getBinary()));
+}
+
+void TreeItem::setKeyName(const QString &name)
+{
+	if(m_key)
+	{
+		try
+		{
+			m_key.setName(name.toStdString());
+		}
+		catch(KeyInvalidName ex)
+		{
+			//			emit showMessage(tr("Error"), tr("Could not set name because Keyname \"%1\" is invalid.").arg(name), ex.what());
+			return;
+		}
+	}
+}
+
+void TreeItem::updateNode(const Key& key)
+{
+	m_key = key;
+	setValue();
+	populateMetaModel();
+}

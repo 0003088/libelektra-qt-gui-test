@@ -1,8 +1,10 @@
 #include "metamodel.hpp"
 #include <QDebug>
 
-MetaModel::MetaModel(const QObject *parent)
+MetaModel::MetaModel(kdb::Key key, const QObject *parent)
+	: m_key(key)
 {
+
 }
 
 int MetaModel::rowCount(const QModelIndex &parent) const
@@ -61,6 +63,26 @@ QVariantMap MetaModel::get(const int& idx) const
 QList<MetaItem *> MetaModel::children() const
 {
 	return m_model;
+}
+
+void MetaModel::setMetaData(const QVariantMap &metaData)
+{
+	//delete old metadata in key
+	foreach(MetaItem* item, m_model)
+		deleteKeyMetaData(item->metaName());
+
+	//delete old metadata in model
+	clear();
+
+	for(QVariantMap::const_iterator iter = metaData.begin(); iter != metaData.end(); iter++) {
+		insertRow(m_model.count(), new MetaItem(iter.key(), iter.value()));
+	}
+}
+
+void MetaModel::deleteKeyMetaData(const QString &name)
+{
+	if(m_key)
+		m_key.delMeta(name.toStdString());
 }
 
 QHash<int, QByteArray> MetaModel::roleNames() const

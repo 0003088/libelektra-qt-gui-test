@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <kdb.hpp>
 #include "metaitem.hpp"
 
 class MetaModel : public QAbstractListModel
@@ -16,19 +17,29 @@ public:
 		MetaValueRole
 	};
 
-	explicit MetaModel(const QObject* parent = 0);
+	explicit MetaModel(kdb::Key key, const QObject* parent = 0);
+	MetaModel(const QObject* parent = 0) {}
 	MetaModel(const MetaModel &other) {Q_UNUSED(other)}
 
 	int												rowCount(const QModelIndex &parent = QModelIndex()) const;
+
 	QVariant										data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
 	void											clear();
 	void											insertRow(int row, MetaItem *item);
+	void											setMetaData(const QVariantMap &metaData);
+
 	QHash<int, QByteArray>							roleNames() const;
-	Q_INVOKABLE				QVariantMap				get(const int &idx) const;
+
+	Q_INVOKABLE	QVariantMap							get(const int &idx) const;
+
 	QList<MetaItem*>								children() const;
 
+
 private:
-	QList<MetaItem*> m_model;
+	kdb::Key										m_key;
+	QList<MetaItem*>								m_model;
+	void											deleteKeyMetaData(const QString &name);
 };
 
 Q_DECLARE_METATYPE(MetaModel)

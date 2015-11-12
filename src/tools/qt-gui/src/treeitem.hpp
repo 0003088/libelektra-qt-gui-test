@@ -12,8 +12,9 @@ class TreeItem : public QObject
 
 public:
 	explicit			TreeItem(const QString& baseName, const QString& name, const kdb::Key& key, QSharedPointer<TreeItem> parent);
-						TreeItem(const TreeItem& other) {}
+						TreeItem(const TreeItem& other);
 						TreeItem() {}
+						~TreeItem();
 
 	QString								baseName() const;
 	QString								name() const;
@@ -34,11 +35,12 @@ public:
 	void								setName(const QString &name);
 	void								setValue(const QVariant &value);
 	void								setMetaData(const QVariantMap &metaData);
+	void								deleteKeyMetaData(const QString &name);
 	void								setKey(const kdb::Key &key);
 	void								setParent(QSharedPointer<TreeItem> parent);
-	void								populateMetaModel();
 	void								setIsDirty(bool value);
 	void								appendChild(QSharedPointer<TreeItem> child);
+	void								updateNode(const kdb::Key &key);
 	void								clear();
 
 	bool								hasChild(const QString &name) const;
@@ -59,6 +61,10 @@ private:
 	QSharedPointer<TreeItem>			m_parent;
 	MetaModel*							m_metaData;
 	bool								m_isDirty;
+
+	void								populateMetaModel();
+	void								setValue();
+	void								setKeyName(const QString &name);
 };
 
 typedef QSharedPointer<TreeItem> TreeItemPtr;
