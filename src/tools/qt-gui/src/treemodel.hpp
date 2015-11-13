@@ -40,9 +40,7 @@ public:
 
 	bool					setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 	bool					insertRow(int row, const QModelIndex &parent, TreeItemPtr item, bool addParent = true);
-	bool					removeRow(int row, const QModelIndex &parent);
-
-	QHash<int, QByteArray>	roleNames() const;
+	bool					removeRows(int row, int count, const QModelIndex &parent);
 
 	void					sink(TreeItemPtr item, QStringList keys, const kdb::Key &key);
 	void					populateModel(const kdb::KeySet &keySet);
@@ -52,6 +50,8 @@ public:
 	QStringList				getSplittedKeyname(const kdb::Key &key);
 
 	Qt::ItemFlags			flags(const QModelIndex &index) const;
+
+	QHash<int, QByteArray>	roleNames() const;
 
 private:
 	TreeItemPtr				m_rootItem;

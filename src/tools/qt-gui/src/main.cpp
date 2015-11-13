@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 	UndoManager manager;
 
 	treeFilter.setSourceModel(&model);
+	treeFilter.setDynamicSortFilter(true);
 
 //	new ModelTest(&model, this);
 

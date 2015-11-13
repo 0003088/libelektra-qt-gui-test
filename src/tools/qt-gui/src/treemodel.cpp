@@ -293,13 +293,19 @@ bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, 
 	return success;
 }
 
-bool TreeModel::removeRow(int row, const QModelIndex &parent)
+bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 {
 	TreeItem *parentItem = getItem(parent);
 	bool success = true;
 
-	beginRemoveRows(parent, row, row);
-	success = parentItem->removeChild(row);
+	beginRemoveRows(parent, row, row + count - 1);
+	for(int i = row; row < count; row++)
+	{
+		success = parentItem->removeChild(i);
+
+		if(!success)
+			break;
+	}
 	endRemoveRows();
 
 	return success;
