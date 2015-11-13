@@ -33,13 +33,13 @@ Item {
 		enabled: treeView.selection.hasSelection || keyAreaView.selection.hasSelection || searchResultsView.selection.hasSelection
 
 		onTriggered: {
-			if(searchResultsView.selection.hasSelection){
+			if(searchResultsView.activeFocus){
 				editKeyWindow.selectedNode = searchResultsView.currentIndex
 			}
-			else if(keyAreaView.selection.hasSelection) {
+			else if(keyAreaView.activeFocus) {
 				editKeyWindow.selectedNode = keyAreaView.currentIndex
 			}
-			else if(treeView.selection.hasSelection) {
+			else if(treeView.activeFocus) {
 				editKeyWindow.selectedNode = filteredTreeModel.mapToSource(treeView.currentIndex)
 			}
 
@@ -57,15 +57,15 @@ Item {
 		shortcut: StandardKey.Delete
 		enabled: !(treeView.selection.hasSelection && keyAreaView.selection.hasSelection && searchResultsView.selection.hasSelection)
 		onTriggered: {
-			if(searchResultsView.selection.hasSelection){
+			if(searchResultsView.activeFocus){
 				undoManager.createDeleteKeyCommand(treeModel, searchResultsView.currentIndex)
 				searchResultsView.selection.clear()
 			}
-			else if(keyAreaView.selection.hasSelection) {
+			else if(keyAreaView.activeFocus) {
 				undoManager.createDeleteKeyCommand(treeModel, keyAreaView.currentIndex)
 				keyAreaView.selection.clear()
 			}
-			else if(treeView.selection.hasSelection) {
+			else if(treeView.activeFocus) {
 				undoManager.createDeleteKeyCommand(treeModel, filteredTreeModel.mapToSource(treeView.currentIndex))
 				treeView.selection.clear()
 			}
