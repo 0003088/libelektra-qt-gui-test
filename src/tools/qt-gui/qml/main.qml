@@ -7,6 +7,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.0
 import Qt.labs.folderlistmodel 2.1
 import org.libelektra.qtgui 1.0
+import "MainFunctions.js" as MFunctions
 
 ApplicationWindow {
 	id: mainWindow

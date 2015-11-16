@@ -102,6 +102,9 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		return QVariant::fromValue(TreeItemPtr(item));
 	}
 
+	case HierarchyRole:
+		return QVariant::fromValue(item->name().count("/"));
+
 	default:
 		return QVariant();
 	}
@@ -299,13 +302,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 	bool success = true;
 
 	beginRemoveRows(parent, row, row + count - 1);
-	for(int i = row; row < count; row++)
-	{
-		success = parentItem->removeChild(i);
-
-		if(!success)
-			break;
-	}
+	success = parentItem->removeChildren(row, row + count - 1);
 	endRemoveRows();
 
 	return success;
@@ -334,6 +331,7 @@ QHash<int, QByteArray> TreeModel::roleNames() const
 	roles[IsNullRole] = "isNull";
 	roles[MetaDataRole] = "metaData";//266
 	roles[ItemRole] = "item";
+	roles[HierarchyRole] = "hierarchy";
 	qDebug() << "BaseNameRole" << BaseNameRole;
 	return roles;
 }

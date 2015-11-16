@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
 	NoLeavesProxyModel treeFilter;
 	UndoManager manager;
 
-	treeFilter.setSourceModel(&model);
 	treeFilter.setDynamicSortFilter(true);
+	treeFilter.setSourceModel(&model);
 
 //	new ModelTest(&model, this);
 

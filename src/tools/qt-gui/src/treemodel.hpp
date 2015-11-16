@@ -24,7 +24,8 @@ public:
 		RootRole,
 		IsNullRole,
 		MetaDataRole,
-		ItemRole
+		ItemRole,
+		HierarchyRole
 	};
 
 	explicit TreeModel(QObject *parent = 0);

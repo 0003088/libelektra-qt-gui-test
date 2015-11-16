@@ -146,3 +146,7 @@ function refreshModel(treeModel) {
 	treeModel.refresh()
 	treeView.currentNode = currentModel.get(index)
 }
+
+function updateStatusBar() {
+	path.text = !treeView.selection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeView.currentIndex), 258) + (!keyAreaView.selection.hasSelection ? "" :  "/" + treeModel.data(keyAreaView.currentIndex, 257))
+}

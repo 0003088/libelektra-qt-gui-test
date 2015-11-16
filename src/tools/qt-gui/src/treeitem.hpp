@@ -47,7 +47,7 @@ public:
 	bool								isDirty() const;
 	bool								childrenAreLeaves() const;
 	bool								insertChild(int index, QSharedPointer<TreeItem> item);
-	bool								removeChild(int index);
+	bool								removeChildren(int row, int count);
 
 	QList<QSharedPointer<TreeItem> >	children() const;
 

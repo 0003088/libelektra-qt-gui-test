@@ -310,12 +310,15 @@ bool TreeItem::insertChild(int index, TreeItemPtr item)
 	return true;
 }
 
-bool TreeItem::removeChild(int index)
+bool TreeItem::removeChildren(int row, int count)
 {
-	if (index < 0 || index > m_children.count())
+	if(row < 0 || row + count > m_children.count())
 		return false;
 
-	m_children.removeAt(index);
+	for(int i = 0; i < count; i++)
+	{
+		m_children.removeAt(i);
+	}
 
 	return true;
 }
