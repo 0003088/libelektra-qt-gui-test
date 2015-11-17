@@ -4,7 +4,7 @@ DeleteKeyCommand::DeleteKeyCommand(TreeModel* model, const QModelIndex &index, Q
 	: QUndoCommand(parent)
 	, m_model(model)
 	, m_item(qvariant_cast<TreeItemPtr>(model->data(index, TreeModel::ItemRole)))
-	, m_index(index)
+	, m_index(m_model->pathFromIndex(index))
 	, m_isRoot(false)
 {
 	setText("Delete Key");
@@ -18,11 +18,14 @@ DeleteKeyCommand::DeleteKeyCommand(TreeModel* model, const QModelIndex &index, Q
 
 void DeleteKeyCommand::undo()
 {
-	if (m_index.isValid())
+	QModelIndex index = m_model->pathToIndex(m_index);
+
+	if (index.isValid())
 	{
 		if(m_isRoot)
-			m_model->removeRow(m_index.row(), m_index.parent());
-		m_model->insertRow(m_index.row(), m_index.parent(), m_item);
+			m_model->removeRow(index.row(), index.parent());
+
+		m_model->insertRow(index.row(), index.parent(), m_item);
 		//	m_model->refreshArrayNumbers();
 		//	m_model->refresh();
 	}
@@ -30,11 +33,13 @@ void DeleteKeyCommand::undo()
 
 void DeleteKeyCommand::redo()
 {
-	if (m_index.isValid())
+	QModelIndex index = m_model->pathToIndex(m_index);
+
+	if (index.isValid())
 	{
-		m_model->removeRow(m_index.row(), m_index.parent());
+		m_model->removeRow(index.row(), index.parent());
 		if(m_isRoot)
-			m_model->insertRow(m_index.row(), m_index.parent(), m_root, false);
+			m_model->insertRow(index.row(), index.parent(), m_root, false);
 		//	m_model->refreshArrayNumbers();
 	}
 }

@@ -38,27 +38,28 @@ void UndoManager::createEditKeyCommand(TreeModel* model, const QModelIndex &inde
 
 void UndoManager::createDeleteKeyCommand(TreeModel* model, const QModelIndex &index)
 {
-	m_undoStack->push(new DeleteKeyCommand(model, index));
+	if(index.isValid())
+		m_undoStack->push(new DeleteKeyCommand(model, index));
 }
 
 void UndoManager::createNewKeyCommand(const QModelIndex &index, DataContainer* data, bool isBelow)
 {
-//	m_undoStack->push(new NewKeyCommand(model, idx, data, isBelow));
+	//	m_undoStack->push(new NewKeyCommand(model, idx, data, isBelow));
 }
 
 void UndoManager::createCopyKeyCommand(const QModelIndex &index)
 {
-//	m_undoStack->push(new CopyKeyCommand(m_clipboardType, qvariant_cast<ConfigNodePtr>(m_clipboard->property("source")), model->model().at(idx)));
+	//	m_undoStack->push(new CopyKeyCommand(m_clipboardType, qvariant_cast<ConfigNodePtr>(m_clipboard->property("source")), model->model().at(idx)));
 }
 
 void UndoManager::createCutKeyCommand(const QModelIndex &index)
 {
-//	m_undoStack->push(new CutKeyCommand(m_clipboardType, qvariant_cast<ConfigNodePtr>(m_clipboard->property("source")), model->model().at(idx), m_clipboard->property("index").toInt()));
+	//	m_undoStack->push(new CutKeyCommand(m_clipboardType, qvariant_cast<ConfigNodePtr>(m_clipboard->property("source")), model->model().at(idx), m_clipboard->property("index").toInt()));
 }
 
 void UndoManager::createImportConfigurationCommand(const QModelIndex &index, DataContainer* data)
 {
-//	m_undoStack->push(new ImportConfigurationCommand(model, idx, data));
+	//	m_undoStack->push(new ImportConfigurationCommand(model, idx, data));
 }
 
 void UndoManager::setClean()
@@ -118,17 +119,17 @@ QString UndoManager::clipboardType() const
 
 void UndoManager::putToClipboard(const QString& type, const QModelIndex &index)
 {
-//	m_clipboardType = type;
+	//	m_clipboardType = type;
 
-//	m_clipboard->clear();
+	//	m_clipboard->clear();
 
-//	m_clipboard->setProperty("source", QVariant::fromValue(model->model().at(idx)));
-//	m_clipboard->setProperty("index", QVariant::fromValue(idx));
+	//	m_clipboard->setProperty("source", QVariant::fromValue(model->model().at(idx)));
+	//	m_clipboard->setProperty("index", QVariant::fromValue(idx));
 
-//	m_clipboardEmpty = false;
+	//	m_clipboardEmpty = false;
 
-//	emit clipboardTypeChanged();
-//	emit canPasteChanged();
+	//	emit clipboardTypeChanged();
+	//	emit canPasteChanged();
 }
 
 QString UndoManager::redoText() const

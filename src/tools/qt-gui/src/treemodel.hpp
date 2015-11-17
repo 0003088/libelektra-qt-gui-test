@@ -7,6 +7,9 @@
 #include <QDebug>
 #include "treeitem.hpp"
 
+typedef QPair<int, int> PathItem;
+typedef QList<PathItem> Path;
+
 class TreeModel : public QAbstractItemModel
 {
 	Q_OBJECT
@@ -33,6 +36,7 @@ public:
 
 	QModelIndex				index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 	QModelIndex				parent(const QModelIndex &index) const;
+	QModelIndex				pathToIndex(const Path &path);
 
 	int						rowCount(const QModelIndex &parent = QModelIndex()) const;
 	int						columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -53,6 +57,8 @@ public:
 	Qt::ItemFlags			flags(const QModelIndex &index) const;
 
 	QHash<int, QByteArray>	roleNames() const;
+
+	Path					pathFromIndex(const QModelIndex &index);
 
 private:
 	TreeItemPtr				m_rootItem;

@@ -28,7 +28,7 @@ private:
 	TreeModel*				m_model;
 	TreeItemPtr				m_item;
 	TreeItemPtr				m_root;
-	QPersistentModelIndex	m_index;
+	Path					m_index;
 	bool					m_isRoot;
 };
 

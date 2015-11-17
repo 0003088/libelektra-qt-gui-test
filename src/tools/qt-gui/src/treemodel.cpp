@@ -314,6 +314,30 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
 	return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 }
 
+Path TreeModel::pathFromIndex(const QModelIndex &index){
+
+	QModelIndex iter = index;
+	Path path;
+
+	while(iter.isValid()){
+		path.prepend(PathItem(iter.row(), iter.column()));
+		iter = iter.parent();
+	}
+
+	return path;
+}
+
+QModelIndex TreeModel::pathToIndex(const Path &path){
+
+	QModelIndex iter;
+
+	for(int i=0; i < path.size(); i++){
+		iter = index(path[i].first, path[i].second, iter);
+	}
+
+	return iter;
+}
+
 QHash<int, QByteArray> TreeModel::roleNames() const
 {
 	QHash<int, QByteArray> roles;

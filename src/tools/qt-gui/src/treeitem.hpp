@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <kdb.hpp>
+#define QT_SHAREDPOINTER_TRACK_POINTERS
 #include <QSharedPointer>
 #include "metamodel.hpp"
 
