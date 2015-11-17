@@ -7,7 +7,7 @@
 #include "noleavesproxymodel.hpp"
 #include "metamodel.hpp"
 #include "undomanager.hpp"
-//#include <modeltest.h>
+#include "modeltest/modeltest.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,10 +26,9 @@ int main(int argc, char *argv[])
 	NoLeavesProxyModel treeFilter;
 	UndoManager manager;
 
-	treeFilter.setDynamicSortFilter(true);
 	treeFilter.setSourceModel(&model);
 
-//	new ModelTest(&model, this);
+	new ModelTest(&model);
 
 	engine.setObjectOwnership(&model, QQmlApplicationEngine::CppOwnership);
 

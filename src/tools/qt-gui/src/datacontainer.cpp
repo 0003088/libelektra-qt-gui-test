@@ -36,10 +36,10 @@ void DataContainer::setOldMetadata(MetaModel *metadata)
 		{
 			oldMDMap.insert(item->metaName(), item->metaValue());
 		}
+
 	}
 
 	m_oldMetadata = oldMDMap;
-	qDebug() << "m_oldMetadata as QVariantMap " << m_oldMetadata;
 }
 
 QString DataContainer::newName() const

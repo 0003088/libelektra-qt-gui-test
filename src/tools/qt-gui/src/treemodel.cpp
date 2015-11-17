@@ -120,28 +120,26 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
 	switch (role)
 	{
 	case BaseNameRole:
-		if(item->baseName() != value.toString()){
+		if(item->baseName() != value.toString())
+		{
 			item->setBaseName(value.toString());
 			item->setIsDirty(true);
 		}
 		break;
 
 	case ValueRole:
-		if(item->value() != value){
+		if(item->value() != value)
 			item->setValue(value);
-		}
 		break;
 
 	case MetaDataRole:
-	{
 		item->setMetaData(value.toMap());
 		break;
 	}
 
-		emit dataChanged(index, index);
+	emit dataChanged(index, index);
 
-		return true;
-	}
+	return true;
 }
 
 void TreeModel::populateModel()
@@ -302,7 +300,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 	bool success = true;
 
 	beginRemoveRows(parent, row, row + count - 1);
-	success = parentItem->removeChildren(row, row + count - 1);
+	success = parentItem->removeChildren(row, count);
 	endRemoveRows();
 
 	return success;

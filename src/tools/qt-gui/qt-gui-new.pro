@@ -2,9 +2,9 @@ TEMPLATE = app
 
 QT += quick  gui core  qml  widgets testlib
 
-HEADERS +=	$$files(src/*.hpp)
+HEADERS +=	$$files(src/*.hpp) $$files(modeltest/*.h)
 
-SOURCES +=	$$files(src/*.cpp,true)
+SOURCES +=	$$files(src/*.cpp,true) $$files(modeltest/*.cpp)
 
 CONFIG += qml_debug
 
@@ -29,5 +29,5 @@ INCLUDEPATH += ../../libtools/include/
 INCLUDEPATH += ../../libtools/include/merging
 INCLUDEPATH += ../../include/
 
-#include(modeltest.pro)
+#include(modeltest/modeltest.pro)
 

@@ -19,12 +19,13 @@ ApplicationWindow {
 	title: "Elektra Editor"
 
 	onClosing: {
-		if(!undoManager.isClean()){
-			close.accepted = false
-			exitDialog.open()
-		}
-		else
-			Qt.quit()
+		Qt.quit()
+//		if(!undoManager.isClean()){
+//			close.accepted = false
+//			exitDialog.open()
+//		}
+//		else
+//			Qt.quit()
 	}
 
 	//**Properties*********************************************************************************************//

@@ -51,6 +51,7 @@ TreeItem::TreeItem(const TreeItem &other)
 
 TreeItem::~TreeItem()
 {
+	qDebug() << m_name << " destroyed";
 	delete m_metaData;
 }
 
@@ -317,7 +318,7 @@ bool TreeItem::removeChildren(int row, int count)
 
 	for(int i = 0; i < count; i++)
 	{
-		m_children.removeAt(i);
+		m_children.removeAt(row);
 	}
 
 	return true;

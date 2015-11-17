@@ -16,14 +16,20 @@ EditKeyCommand::EditKeyCommand(TreeModel* model, const QModelIndex &index, DataC
 
 void EditKeyCommand::undo()
 {
-	m_model->setData(m_index, m_oldName, TreeModel::BaseNameRole);
-	m_model->setData(m_index, m_oldValue, TreeModel::ValueRole);
-	m_model->setData(m_index, m_oldMetaData, TreeModel::MetaDataRole);
+	if (m_index.isValid())
+	{
+		m_model->setData(m_index, m_oldName, TreeModel::BaseNameRole);
+		m_model->setData(m_index, m_oldValue, TreeModel::ValueRole);
+		m_model->setData(m_index, m_oldMetaData, TreeModel::MetaDataRole);
+	}
 }
 
 void EditKeyCommand::redo()
 {
-	m_model->setData(m_index, m_newName, TreeModel::BaseNameRole);
-	m_model->setData(m_index, m_newValue, TreeModel::ValueRole);
-	m_model->setData(m_index, m_newMetaData, TreeModel::MetaDataRole);
+	if (m_index.isValid())
+	{
+		m_model->setData(m_index, m_newName, TreeModel::BaseNameRole);
+		m_model->setData(m_index, m_newValue, TreeModel::ValueRole);
+		m_model->setData(m_index, m_newMetaData, TreeModel::MetaDataRole);
+	}
 }
