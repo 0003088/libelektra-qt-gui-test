@@ -67,6 +67,7 @@ private:
 	void								populateMetaModel();
 	void								setValue();
 	void								setKeyName(const QString &name);
+	int									getRowByName() const;
 };
 
 typedef QSharedPointer<TreeItem> TreeItemPtr;

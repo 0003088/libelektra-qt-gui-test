@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
 
 	treeFilter.setSourceModel(&model);
 
-	new ModelTest(&model);
-
 	engine.setObjectOwnership(&model, QQmlApplicationEngine::CppOwnership);
 
 	ctxt->setContextProperty("treeModel", &model);
@@ -37,6 +35,8 @@ int main(int argc, char *argv[])
 	ctxt->setContextProperty("undoManager", &manager);
 
 	model.populateModel();
+
+	new ModelTest(&model);
 
 	engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

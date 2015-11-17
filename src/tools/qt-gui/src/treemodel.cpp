@@ -19,10 +19,10 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
 		return QModelIndex();
 
 	TreeItem* parentItem = getItem(parent);
-	TreeItemPtr childItem = parentItem->child(row);
+	TreeItem* childItem = parentItem->child(row).data();
 
 	if (childItem)
-		return createIndex(row, column, childItem.data());
+		return createIndex(row, column, childItem);
 	else
 		return QModelIndex();
 }
@@ -33,12 +33,12 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 		return QModelIndex();
 
 	TreeItem* childItem = getItem(index);
-	TreeItemPtr parentItem = childItem->parent();
+	TreeItem* parentItem = childItem->parent().data();
 
-	if(parentItem == m_rootItem)
+	if(parentItem == m_rootItem.data())
 		return QModelIndex();
 
-	return createIndex(parentItem->childCount(), 0, parentItem.data());
+	return createIndex(parentItem->row(), 0, parentItem);
 }
 
 int TreeModel::rowCount(const QModelIndex &parent) const

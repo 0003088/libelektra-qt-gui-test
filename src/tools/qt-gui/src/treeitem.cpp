@@ -183,7 +183,7 @@ int TreeItem::columnCount() const
 int TreeItem::row() const
 {
 	if (m_parent)
-		return m_parent->m_children.indexOf(TreeItemPtr(const_cast<TreeItem*>(this)));
+		return getRowByName();
 
 	return 0;
 }
@@ -292,6 +292,15 @@ void TreeItem::setKeyName(const QString &name)
 			return;
 		}
 	}
+}
+
+int TreeItem::getRowByName() const
+{
+	foreach(TreeItemPtr item, m_parent->children())
+		if(item->name() == m_name)
+			return m_parent->children().indexOf(item);
+
+	return 0;
 }
 
 void TreeItem::updateNode(const Key& key)

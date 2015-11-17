@@ -32,7 +32,8 @@ bool UndoManager::canRedo() const
 
 void UndoManager::createEditKeyCommand(TreeModel* model, const QModelIndex &index, DataContainer* data)
 {
-	m_undoStack->push(new EditKeyCommand(model, index, data));
+	if(index.isValid())
+		m_undoStack->push(new EditKeyCommand(model, index, data));
 }
 
 void UndoManager::createDeleteKeyCommand(TreeModel* model, const QModelIndex &index)

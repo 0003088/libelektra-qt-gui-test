@@ -60,18 +60,12 @@ Item {
 		onTriggered: {
 			if(searchResultsView.activeFocus){
 				undoManager.createDeleteKeyCommand(treeModel, searchResultsView.currentIndex)
-				searchResultsView.selection.clear()
-				MFunctions.updateStatusBar()
 			}
 			else if(keyAreaView.activeFocus) {
 				undoManager.createDeleteKeyCommand(treeModel, keyAreaView.currentIndex)
-				keyAreaView.selection.clear()
-				MFunctions.updateStatusBar()
 			}
 			else if(treeView.activeFocus) {
 				undoManager.createDeleteKeyCommand(treeModel, filteredTreeModel.mapToSource(treeView.currentIndex))
-				treeView.selection.clear()
-				MFunctions.updateStatusBar()
 			}
 		}
 	}
