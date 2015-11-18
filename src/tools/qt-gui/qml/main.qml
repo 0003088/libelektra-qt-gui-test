@@ -20,12 +20,12 @@ ApplicationWindow {
 
 	onClosing: {
 		Qt.quit()
-//		if(!undoManager.isClean()){
-//			close.accepted = false
-//			exitDialog.open()
-//		}
-//		else
-//			Qt.quit()
+		//		if(!undoManager.isClean()){
+		//			close.accepted = false
+		//			exitDialog.open()
+		//		}
+		//		else
+		//			Qt.quit()
 	}
 
 	//**Properties*********************************************************************************************//
@@ -155,7 +155,8 @@ ApplicationWindow {
 
 				anchors.fill: parent
 				anchors.leftMargin: defaultMargins
-				text: !treeView.selection.hasSelection ? "" : filteredTreeModel.data(treeView.currentIndex, 258) + (!keyAreaView.selection.hasSelection ? "" :  "/" + treeModel.data(keyAreaView.currentIndex, 257))
+				text: !treeView.selection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeView.currentIndex), 258) +
+														 (!keyAreaView.selection.hasSelection ? "" :  "/" + treeModel.data(filteredTableModel.mapToSource(keyAreaView.currentIndex), 257))
 			}
 		}
 	}
@@ -192,15 +193,7 @@ ApplicationWindow {
 				}
 
 				onClicked: {
-					if(filteredTreeModel.data(currentIndex, 263)) {
-						keyAreaView.model = treeModel
-						keyAreaView.selection.model = treeModel
-						keyAreaView.rootIndex = filteredTreeModel.mapToSource(currentIndex)
-					}
-					else {
-						keyAreaView.model = null
-						keyAreaView.selection.clear()
-					}
+					keyAreaView.rootIndex = filteredTableModel.mapFromSource(filteredTreeModel.mapToSource(currentIndex))
 					metaAreaView.model = null
 				}
 
@@ -252,10 +245,11 @@ ApplicationWindow {
 					frameVisible: false
 					alternatingRowColors: false
 					backgroundVisible: false
-					onClicked: metaAreaView.model = treeModel.data(currentIndex, 266)
+					onCurrentIndexChanged: metaAreaView.model = treeModel.data(filteredTableModel.mapToSource(currentIndex), 266)
+					model: filteredTableModel
 
 					selection: ItemSelectionModel {
-
+						model: filteredTableModel
 					}
 
 					TableViewColumn {
@@ -358,9 +352,9 @@ ApplicationWindow {
 
 						anchors.fill: parent
 						clip: true
-//						highlightMoveDuration: 0
-//						highlightResizeDuration: 0
-//						keyNavigationWraps: true
+						//						highlightMoveDuration: 0
+						//						highlightResizeDuration: 0
+						//						keyNavigationWraps: true
 						model: null
 
 						selection: ItemSelectionModel {

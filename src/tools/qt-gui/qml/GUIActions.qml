@@ -38,7 +38,7 @@ Item {
 				editKeyWindow.selectedNode = searchResultsView.currentIndex
 			}
 			else if(keyAreaView.activeFocus) {
-				editKeyWindow.selectedNode = keyAreaView.currentIndex
+				editKeyWindow.selectedNode = filteredTableModel.mapToSource(keyAreaView.currentIndex)
 			}
 			else if(treeView.activeFocus) {
 				editKeyWindow.selectedNode = filteredTreeModel.mapToSource(treeView.currentIndex)
@@ -62,7 +62,7 @@ Item {
 				undoManager.createDeleteKeyCommand(treeModel, searchResultsView.currentIndex)
 			}
 			else if(keyAreaView.activeFocus) {
-				undoManager.createDeleteKeyCommand(treeModel, keyAreaView.currentIndex)
+				undoManager.createDeleteKeyCommand(treeModel, filteredTableModel.mapToSource(keyAreaView.currentIndex))
 			}
 			else if(treeView.activeFocus) {
 				undoManager.createDeleteKeyCommand(treeModel, filteredTreeModel.mapToSource(treeView.currentIndex))

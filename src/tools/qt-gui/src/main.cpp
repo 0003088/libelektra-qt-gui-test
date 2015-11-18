@@ -5,6 +5,7 @@
 #include <QSortFilterProxyModel>
 #include "treemodel.hpp"
 #include "noleavesproxymodel.hpp"
+#include "onlyleavesproxymodel.hpp"
 #include "metamodel.hpp"
 #include "undomanager.hpp"
 #include "modeltest/modeltest.h"
@@ -24,14 +25,17 @@ int main(int argc, char *argv[])
 
 	TreeModel model;
 	NoLeavesProxyModel treeFilter;
+	OnlyLeavesProxyModel tableFilter;
 	UndoManager manager;
 
 	treeFilter.setSourceModel(&model);
+	tableFilter.setSourceModel(&model);
 
 	engine.setObjectOwnership(&model, QQmlApplicationEngine::CppOwnership);
 
 	ctxt->setContextProperty("treeModel", &model);
 	ctxt->setContextProperty("filteredTreeModel", &treeFilter);
+	ctxt->setContextProperty("filteredTableModel", &tableFilter);
 	ctxt->setContextProperty("undoManager", &manager);
 
 	model.populateModel();

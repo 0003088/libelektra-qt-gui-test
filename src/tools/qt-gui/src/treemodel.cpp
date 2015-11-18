@@ -298,10 +298,20 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 {
 	TreeItem *parentItem = getItem(parent);
 	bool success = true;
+	bool noChildren = false;
+
+	if(parentItem->childCount() == count)
+		noChildren = true;
+
+	if(noChildren)
+		emit layoutAboutToBeChanged();
 
 	beginRemoveRows(parent, row, row + count - 1);
 	success = parentItem->removeChildren(row, count);
 	endRemoveRows();
+
+	if(noChildren)
+		emit layoutChanged();
 
 	return success;
 }
@@ -311,7 +321,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex& index) const
 	if (!index.isValid())
 		return Qt::ItemIsEnabled;
 
-	return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+	return  Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
 }
 
 Path TreeModel::pathFromIndex(const QModelIndex &index){
