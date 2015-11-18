@@ -99,7 +99,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
 	case ItemRole:{
 		QQmlApplicationEngine::setObjectOwnership(item, QQmlApplicationEngine::CppOwnership);
-		return QVariant::fromValue(TreeItemPtr(item));
+		return QVariant::fromValue(TreeItemPtr(item->parent()->child(item->row())));
 	}
 
 	case HierarchyRole:
@@ -285,7 +285,7 @@ bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, 
 	bool success;
 
 	if(addParent)
-		item->setParent(TreeItemPtr(parentItem));
+		item->setParent(parentItem->parent()->child(parentItem->row()));
 
 	beginInsertRows(parent, row, row);
 	success = parentItem->insertChild(row, item);
