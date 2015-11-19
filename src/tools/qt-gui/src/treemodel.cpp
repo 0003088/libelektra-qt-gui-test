@@ -35,7 +35,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 	TreeItem* childItem = getItem(index);
 	TreeItem* parentItem = childItem->parent().data();
 
-	if(parentItem == m_rootItem.data())
+	if(!parentItem || parentItem == m_rootItem.data())
 		return QModelIndex();
 
 	return createIndex(parentItem->row(), 0, parentItem);
@@ -99,7 +99,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
 	case ItemRole:{
 		QQmlApplicationEngine::setObjectOwnership(item, QQmlApplicationEngine::CppOwnership);
-		return QVariant::fromValue(TreeItemPtr(item->parent()->child(item->row())));
+		return QVariant::fromValue(item->parent()->child(item->row()));
 	}
 
 	case HierarchyRole:
@@ -283,13 +283,25 @@ bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, 
 {
 	TreeItem *parentItem = getItem(parent);
 	bool success;
+	bool noChildren = false;
+
+	if(parentItem->childCount() == 0)
+		noChildren = true;
 
 	if(addParent)
 		item->setParent(parentItem->parent()->child(parentItem->row()));
 
+	if(noChildren)
+		emit layoutAboutToBeChanged();
+
 	beginInsertRows(parent, row, row);
 	success = parentItem->insertChild(row, item);
 	endInsertRows();
+
+	if(noChildren)
+	{	emit changePersistentIndex(QModelIndex(), QModelIndex());
+		emit layoutChanged();
+	}
 
 	return success;
 }
@@ -311,7 +323,9 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 	endRemoveRows();
 
 	if(noChildren)
+	{	emit changePersistentIndex(QModelIndex(), QModelIndex());
 		emit layoutChanged();
+	}
 
 	return success;
 }
@@ -341,8 +355,8 @@ QModelIndex TreeModel::pathToIndex(const Path &path){
 
 	QModelIndex iter;
 
-	for(int i=0; i < path.size(); i++){
-		iter = index(path[i].first, path[i].second, iter);
+	for(int i = 0; i < path.size(); i++){
+		iter = this->index(path[i].first, path[i].second, iter);
 	}
 
 	return iter;

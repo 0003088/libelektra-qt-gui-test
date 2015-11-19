@@ -199,7 +199,7 @@ Item {
 			for(var i = undoManager.index(); i > undoManager.cleanIndex(); i--)
 				undoAction.trigger()
 
-			treeView.treeModel.refresh()
+//			treeView.treeModel.refresh()
 		}
 	}
 
@@ -212,40 +212,41 @@ Item {
 		shortcut: StandardKey.Redo
 		enabled: undoManager.canRedo
 		onTriggered: {
-			if(undoManager.redoText === "deleteBranch"){
-				undoManager.redo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.redoText === "deleteKey"){
-				undoManager.redo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.redoText === "deleteSearchResultsKey" || undoManager.redoText === "deleteSearchResultsBranch"){
-				undoManager.redo()
-				undoManager.redo()
-			}
-			else if(undoManager.redoText === "copyBranch"){
-				undoManager.redo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.redoText === "cutBranch"){
-				undoManager.redo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.redoText === "import"){
-				undoManager.redo()
-				treeView.treeModel.refresh()
-			}
-			else if(undoManager.redoText === "newBranch"){
-				undoManager.redo()
-				treeView.treeModel.refresh()
-			}
-			else{
-				undoManager.redo()
-				if(searchResultsListView.model !== null && searchResultsListView.model !== undefined)
-					searchResultsListView.model.refresh()
-			}
-			treeView.updateIndicator()
+			undoManager.redo()
+//			if(undoManager.redoText === "deleteBranch"){
+//				undoManager.redo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.redoText === "deleteKey"){
+//				undoManager.redo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.redoText === "deleteSearchResultsKey" || undoManager.redoText === "deleteSearchResultsBranch"){
+//				undoManager.redo()
+//				undoManager.redo()
+//			}
+//			else if(undoManager.redoText === "copyBranch"){
+//				undoManager.redo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.redoText === "cutBranch"){
+//				undoManager.redo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.redoText === "import"){
+//				undoManager.redo()
+//				treeView.treeModel.refresh()
+//			}
+//			else if(undoManager.redoText === "newBranch"){
+//				undoManager.redo()
+//				treeView.treeModel.refresh()
+//			}
+//			else{
+//				undoManager.redo()
+//				if(searchResultsListView.model !== null && searchResultsListView.model !== undefined)
+//					searchResultsListView.model.refresh()
+//			}
+//			treeView.updateIndicator()
 		}
 
 	}
@@ -261,7 +262,7 @@ Item {
 			for(var i = undoManager.index(); i < undoManager.count(); i++)
 				redoAction.trigger()
 
-			treeView.treeModel.refresh()
+//			treeView.treeModel.refresh()
 		}
 	}
 

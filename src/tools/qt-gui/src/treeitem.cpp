@@ -327,6 +327,7 @@ bool TreeItem::removeChildren(int row, int count)
 
 	for(int i = 0; i < count; i++)
 	{
+		m_children.at(i)->setParent(TreeItemPtr());
 		m_children.removeAt(row);
 	}
 

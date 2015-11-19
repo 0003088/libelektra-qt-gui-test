@@ -27,7 +27,7 @@ public:
 private:
 
 	TreeModel*				m_model;
-	QPersistentModelIndex   m_index;
+	Path					m_index;
 
 	QString					m_oldName;
 	QString					m_oldValue;

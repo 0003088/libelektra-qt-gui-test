@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
 	treeFilter.setSourceModel(&model);
 	tableFilter.setSourceModel(&model);
 
-	engine.setObjectOwnership(&model, QQmlApplicationEngine::CppOwnership);
+	engine.setObjectOwnership(&treeFilter, QQmlApplicationEngine::CppOwnership);
+	engine.setObjectOwnership(&tableFilter, QQmlApplicationEngine::CppOwnership);
 
 	ctxt->setContextProperty("treeModel", &model);
 	ctxt->setContextProperty("filteredTreeModel", &treeFilter);
@@ -41,6 +42,8 @@ int main(int argc, char *argv[])
 	model.populateModel();
 
 	new ModelTest(&model);
+	new ModelTest(&treeFilter);
+	new ModelTest(&tableFilter);
 
 	engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
 

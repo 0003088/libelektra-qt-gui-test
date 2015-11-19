@@ -48,6 +48,23 @@ ApplicationWindow {
 		id: container
 	}
 
+	//**Signals & Slots****************************************************************************************//
+
+	//Set up slots to catch signals from objects
+	Connections {
+		target: treeModel
+
+		//		onShowMessage: {
+		//			ErrorDialog.showMessage(title, text, detailedText)
+		//		}
+		//		onUpdateIndicator: {
+		//			treeView.updateIndicator()
+		//		}
+		onLayoutChanged: {
+			treeView.updateIndicator()
+		}
+	}
+
 	//**Colors*************************************************************************************************//
 
 	SystemPalette {
@@ -179,6 +196,8 @@ ApplicationWindow {
 			TreeView {
 				id: treeView
 
+				signal updateIndicator()
+
 				anchors.fill: parent
 				anchors.margins: 1
 				headerVisible: false
@@ -213,11 +232,20 @@ ApplicationWindow {
 					Indicator {
 						id: indicator
 
+						signal updateIndicator()
+
+						Component.onCompleted: treeView.updateIndicator.connect(updateIndicator)
+
 						paintcolor: label.color
 						width: label.font.pixelSize*0.85
 						height: width
 						anchors.verticalCenter: label.verticalCenter
-						opacity: filteredTreeModel !== null ? (filteredTreeModel.data(styleData.index, 262) > 0 && filteredTreeModel.data(styleData.index, 263) ? 1 : 0) : 0
+						opacity: (filteredTreeModel !== null ? (treeModel.data(filteredTreeModel.mapToSource(styleData.index), 262) > 0 && treeModel.data(filteredTreeModel.mapToSource(styleData.index), 263) ? 1 : 0) : 0)
+						onUpdateIndicator: {
+							paintcolor = label.color
+							opacity = (filteredTreeModel !== null ? (treeModel.data(filteredTreeModel.mapToSource(styleData.index), 262) > 0 && treeModel.data(filteredTreeModel.mapToSource(styleData.index), 263) ? 1 : 0) : 0)
+
+						}
 					}
 				}
 
