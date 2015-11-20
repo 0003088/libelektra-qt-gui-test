@@ -21,19 +21,25 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
 	TreeItem* parentItem = getItem(parent);
 	TreeItem* childItem = parentItem->child(row).data();
 
+	Q_ASSERT(parentItem);
+	Q_ASSERT(childItem);
+
 	if (childItem)
 		return createIndex(row, column, childItem);
 	else
 		return QModelIndex();
 }
 
-QModelIndex TreeModel::parent(const QModelIndex &index) const
+QModelIndex TreeModel::parent(const QModelIndex &child) const
 {
-	if (!index.isValid())
+	if (!child.isValid())
 		return QModelIndex();
 
-	TreeItem* childItem = getItem(index);
+	TreeItem* childItem = getItem(child);
 	TreeItem* parentItem = childItem->parent().data();
+
+	Q_ASSERT(parentItem);
+	Q_ASSERT(childItem);
 
 	if(!parentItem || parentItem == m_rootItem.data())
 		return QModelIndex();
@@ -44,6 +50,8 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
 	TreeItem* parentItem = getItem(parent);
+
+	Q_ASSERT(parentItem);
 
 	return parentItem->childCount();
 }
@@ -59,6 +67,8 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		return QVariant();
 
 	TreeItem* item = getItem(index);
+
+	Q_ASSERT(item);
 
 	switch (role)
 	{
@@ -116,6 +126,8 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
 		return false;
 
 	TreeItem* item = getItem(index);
+
+	Q_ASSERT(item);
 
 	switch (role)
 	{
@@ -282,6 +294,7 @@ TreeItem* TreeModel::getItem(const QModelIndex &index) const
 bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, bool addParent)
 {
 	TreeItem *parentItem = getItem(parent);
+	Q_ASSERT(parentItem);
 	bool success;
 	bool noChildren = false;
 
@@ -291,15 +304,14 @@ bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, 
 	if(addParent)
 		item->setParent(parentItem->parent()->child(parentItem->row()));
 
-	if(noChildren)
-		emit layoutAboutToBeChanged();
-
 	beginInsertRows(parent, row, row);
 	success = parentItem->insertChild(row, item);
 	endInsertRows();
 
 	if(noChildren)
-	{	emit changePersistentIndex(QModelIndex(), QModelIndex());
+	{
+		emit layoutAboutToBeChanged();
+//		emit changePersistentIndex(QModelIndex(), QModelIndex());
 		emit layoutChanged();
 	}
 
@@ -309,21 +321,21 @@ bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, 
 bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 {
 	TreeItem *parentItem = getItem(parent);
+	Q_ASSERT(parentItem);
 	bool success = true;
 	bool noChildren = false;
 
 	if(parentItem->childCount() == count)
 		noChildren = true;
 
-	if(noChildren)
-		emit layoutAboutToBeChanged();
-
 	beginRemoveRows(parent, row, row + count - 1);
 	success = parentItem->removeChildren(row, count);
 	endRemoveRows();
 
 	if(noChildren)
-	{	emit changePersistentIndex(QModelIndex(), QModelIndex());
+	{
+		emit layoutAboutToBeChanged();
+//		emit changePersistentIndex(QModelIndex(), QModelIndex());
 		emit layoutChanged();
 	}
 

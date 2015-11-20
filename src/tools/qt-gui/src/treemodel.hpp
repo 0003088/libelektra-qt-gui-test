@@ -35,7 +35,7 @@ public:
 	TreeModel(const TreeModel &other) {Q_UNUSED(other)}
 
 	QModelIndex				index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-	QModelIndex				parent(const QModelIndex &index) const;
+	QModelIndex				parent(const QModelIndex &child) const;
 	QModelIndex				pathToIndex(const Path &path);
 
 	int						rowCount(const QModelIndex &parent = QModelIndex()) const;

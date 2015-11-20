@@ -5,12 +5,12 @@
 using namespace kdb;
 
 TreeItem::TreeItem(const QString &baseName, const QString &name, const kdb::Key &key, TreeItemPtr parent)
-	: m_baseName(baseName)
-	, m_name(name)
-	, m_key(key)
-	, m_parent(parent)
-	, m_metaData(NULL)
-	, m_isDirty(false)
+: m_baseName(baseName)
+, m_name(name)
+, m_key(key)
+, m_parent(parent)
+, m_metaData(NULL)
+, m_isDirty(false)
 {
 	setValue();
 
@@ -22,14 +22,14 @@ TreeItem::TreeItem(const QString &baseName, const QString &name, const kdb::Key 
 }
 
 TreeItem::TreeItem(const TreeItem &other)
-	: QObject()
-	, m_baseName(other.m_baseName)
-	, m_name(other.m_name)
-	, m_key(other.key().dup())
-	, m_parent(NULL)
-	, m_value(other.m_value)
-	, m_metaData(NULL)
-	, m_isDirty(false)
+: QObject()
+, m_baseName(other.m_baseName)
+, m_name(other.m_name)
+, m_key(other.key().dup())
+, m_parent(NULL)
+, m_value(other.m_value)
+, m_metaData(NULL)
+, m_isDirty(false)
 {
 	if(other.m_children.count() > 0)
 	{
@@ -296,9 +296,12 @@ void TreeItem::setKeyName(const QString &name)
 
 int TreeItem::getRowByName() const
 {
-	foreach(TreeItemPtr item, m_parent->children())
-		if(item->name() == m_name)
-			return m_parent->children().indexOf(item);
+	if(m_parent)
+	{
+		foreach(TreeItemPtr item, m_parent->children())
+			if(item->name() == m_name)
+				return m_parent->children().indexOf(item);
+	}
 
 	return 0;
 }
@@ -327,7 +330,6 @@ bool TreeItem::removeChildren(int row, int count)
 
 	for(int i = 0; i < count; i++)
 	{
-		m_children.at(i)->setParent(TreeItemPtr());
 		m_children.removeAt(row);
 	}
 

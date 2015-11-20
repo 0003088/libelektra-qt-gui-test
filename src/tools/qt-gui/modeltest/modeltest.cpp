@@ -372,10 +372,10 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
 				qDebug() << r << c << currentDepth << model->data(index).toString()
 						 << model->data(parent).toString();
 				qDebug() << index << parent << model->parent(index);
-//                 And a view that you can even use to show the model.
-//                 QTreeView view;
-//                 view.setModel(model);
-//                 view.show();
+//				 And a view that you can even use to show the model.
+				 QTreeView view;
+				 view.setModel(model);
+				 view.show();
 			}
 
 			// Check that we can get back our real parent.

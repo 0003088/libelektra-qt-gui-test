@@ -62,6 +62,24 @@ ApplicationWindow {
 		//		}
 		onLayoutChanged: {
 			treeView.updateIndicator()
+			treeViewSelection.reset()
+			keyViewSelection.reset()
+		}
+	}
+
+	Connections {
+		target: treeViewSelection
+
+		onSelectionChanged: {
+			path.selectionChanged()
+		}
+	}
+
+	Connections {
+		target: keyViewSelection
+
+		onSelectionChanged: {
+			path.selectionChanged()
 		}
 	}
 
@@ -170,10 +188,12 @@ ApplicationWindow {
 			Label {
 				id: path
 
+				signal selectionChanged()
+
 				anchors.fill: parent
 				anchors.leftMargin: defaultMargins
-				text: !treeView.selection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeView.currentIndex), 258) +
-														 (!keyAreaView.selection.hasSelection ? "" :  "/" + treeModel.data(filteredTableModel.mapToSource(keyAreaView.currentIndex), 257))
+				onSelectionChanged: text = !treeViewSelection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeViewSelection.currentIndex), 258) +
+														 (!keyViewSelection.hasSelection ? "" :  "/" + treeModel.data(filteredTableModel.mapToSource(keyViewSelection.currentIndex), 257))
 			}
 		}
 	}
@@ -208,12 +228,14 @@ ApplicationWindow {
 				model: filteredTreeModel
 
 				selection: ItemSelectionModel {
-					model: filteredTreeModel
-				}
+					id: treeViewSelection
 
-				onClicked: {
-					keyAreaView.rootIndex = filteredTableModel.mapFromSource(filteredTreeModel.mapToSource(currentIndex))
-					metaAreaView.model = null
+					model: filteredTreeModel
+					onSelectionChanged: {
+						keyAreaView.rootIndex = filteredTableModel.mapFromSource(filteredTreeModel.mapToSource(currentIndex))
+						keyViewSelection.clearSelection()
+						metaAreaView.model = null
+					}
 				}
 
 				itemDelegate: Row {
@@ -277,6 +299,7 @@ ApplicationWindow {
 					model: filteredTableModel
 
 					selection: ItemSelectionModel {
+						id: keyViewSelection
 						model: filteredTableModel
 					}
 
