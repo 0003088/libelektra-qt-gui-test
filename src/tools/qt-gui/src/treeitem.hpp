@@ -19,6 +19,7 @@ public:
 
 	QString								baseName() const;
 	QString								name() const;
+	QString								toString() const;
 
 	QVariant							value() const;
 
@@ -48,6 +49,7 @@ public:
 	bool								isDirty() const;
 	bool								childrenAreLeaves() const;
 	bool								insertChild(int index, QSharedPointer<TreeItem> item);
+	bool								insertChildren(int index, QList<QSharedPointer<TreeItem> > items);
 	bool								removeChildren(int row, int count);
 
 	QList<QSharedPointer<TreeItem> >	children() const;

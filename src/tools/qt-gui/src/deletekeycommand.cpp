@@ -10,6 +10,8 @@ DeleteKeyCommand::DeleteKeyCommand(TreeModel* model, const QModelIndex &index, Q
 {
 	setText("Delete Key");
 
+	qDebug() << index << ", " << m_index;
+
 	if(!m_item->name().contains('/'))
 	{
 		m_isRoot = true;
@@ -21,12 +23,18 @@ void DeleteKeyCommand::undo()
 {
 	QModelIndex index = m_model->pathToIndex(m_index);
 
+	qDebug() << "index " << index;
+
 	if (index.isValid())
 	{
 //		if(m_isRoot)
 //			m_model->removeRow(index.row(), index);
 
-		m_model->insertRow(m_row, index, m_item);
+		QList<TreeItemPtr> items;
+		items.append(TreeItemPtr(new TreeItem(*m_item.data())));
+		m_model->setItemsToInsert(items);
+
+		m_model->insertRows(m_row, items.count(), index);
 		//	m_model->refreshArrayNumbers();
 		//	m_model->refresh();
 	}
@@ -36,9 +44,13 @@ void DeleteKeyCommand::redo()
 {
 	QModelIndex index = m_model->pathToIndex(m_index);
 
+	qDebug() << "index " << index;
+
 	if (index.isValid())
 	{
 		m_model->removeRow(m_row, index);
+		if(m_item->parent())
+			qDebug() << "parent " << m_item->parent()->name();
 //		if(m_isRoot)
 //			m_model->insertRow(index.row(), index.parent(), m_root, false);
 		//	m_model->refreshArrayNumbers();

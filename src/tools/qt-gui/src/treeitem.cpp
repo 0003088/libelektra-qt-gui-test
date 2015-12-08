@@ -91,6 +91,11 @@ QString TreeItem::name() const
 	return m_name;
 }
 
+QString TreeItem::toString() const
+{
+	return QString(m_name + ", " + m_parent->name());
+}
+
 void TreeItem::setName(const QString &name)
 {
 	m_name = name;
@@ -163,11 +168,11 @@ void TreeItem::setParent(TreeItemPtr parent)
 }
 
 TreeItemPtr TreeItem::child(int row) const
-{
-	if(row < m_children.count())
-		return m_children.at(row);
+{		
+	if(row < 0 || row > m_children.count()-1)
+		return TreeItemPtr();
 
-	return TreeItemPtr();
+	return m_children.at(row);
 }
 
 int TreeItem::childCount() const
@@ -235,6 +240,19 @@ bool TreeItem::childrenAreLeaves() const
 	{
 		if(item->childCount() > 0)
 			return false;
+	}
+
+	return true;
+}
+
+bool TreeItem::insertChildren(int index, QList<QSharedPointer<TreeItem> > items)
+{
+	if (index < 0 || index > m_children.count())
+		return false;
+
+	foreach(TreeItemPtr item, items)
+	{
+		m_children.insert(index, item);
 	}
 
 	return true;
@@ -327,11 +345,11 @@ bool TreeItem::removeChildren(int row, int count)
 {
 	if(row < 0 || row + count > m_children.count())
 		return false;
-
+	qDebug() << "childcount of " << m_name << " " << m_children.count();
 	for(int i = 0; i < count; i++)
 	{
 		m_children.removeAt(row);
 	}
-
+	qDebug() << "childcount of " << m_name << " " << m_children.count();
 	return true;
 }

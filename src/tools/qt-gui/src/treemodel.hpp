@@ -45,12 +45,14 @@ public:
 
 	bool					setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 	bool					insertRow(int row, const QModelIndex &parent, TreeItemPtr item, bool addParent = true);
+	bool					insertRows(int row, int count, const QModelIndex &parent);
 	bool					removeRows(int row, int count, const QModelIndex &parent);
 
 	void					sink(TreeItemPtr item, QStringList keys, const kdb::Key &key);
 	void					populateModel(const kdb::KeySet &keySet);
 	void					populateModel();
 	void					createNewNodes(kdb::KeySet keySet);
+	void					setItemsToInsert(const QList<TreeItemPtr> &itemsToInsert);
 
 	QStringList				getSplittedKeyname(const kdb::Key &key);
 
@@ -60,10 +62,14 @@ public:
 
 	Path					pathFromIndex(const QModelIndex &index);
 
+	QList<TreeItemPtr>		getItemsToInsert() const;
+
 private:
 	TreeItemPtr				m_rootItem;
 	kdb::KDB				m_kdb;
 	TreeItem				*getItem(const QModelIndex &index) const;
+	TreeItemPtr				getItemPtr(const QModelIndex &index) const;
+	QList<TreeItemPtr>		m_itemsToInsert;
 };
 
 Q_DECLARE_METATYPE(TreeModel)

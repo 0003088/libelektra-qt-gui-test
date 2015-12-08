@@ -22,7 +22,6 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
 	TreeItem* childItem = parentItem->child(row).data();
 
 	Q_ASSERT(parentItem);
-	Q_ASSERT(childItem);
 
 	if (childItem)
 		return createIndex(row, column, childItem);
@@ -41,7 +40,7 @@ QModelIndex TreeModel::parent(const QModelIndex &child) const
 	Q_ASSERT(parentItem);
 	Q_ASSERT(childItem);
 
-	if(!parentItem || parentItem == m_rootItem.data())
+	if(parentItem == m_rootItem.data())
 		return QModelIndex();
 
 	return createIndex(parentItem->row(), 0, parentItem);
@@ -116,7 +115,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		return QVariant::fromValue(item->name().count("/"));
 
 	default:
-		return QVariant();
+		return QVariant::fromValue(item);
 	}
 }
 
@@ -291,6 +290,28 @@ TreeItem* TreeModel::getItem(const QModelIndex &index) const
 	return m_rootItem.data();
 }
 
+TreeItemPtr TreeModel::getItemPtr(const QModelIndex &index) const
+{
+	if(index.isValid()) {
+		TreeItemPtr item = qvariant_cast<TreeItemPtr>(data(index, ItemRole));
+
+		if (item)
+			return item;
+	}
+
+	return m_rootItem;
+}
+
+QList<TreeItemPtr> TreeModel::getItemsToInsert() const
+{
+	return m_itemsToInsert;
+}
+
+void TreeModel::setItemsToInsert(const QList<TreeItemPtr> &itemsToInsert)
+{
+	m_itemsToInsert = itemsToInsert;
+}
+
 bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, bool addParent)
 {
 	TreeItem *parentItem = getItem(parent);
@@ -301,17 +322,65 @@ bool TreeModel::insertRow(int row, const QModelIndex& parent, TreeItemPtr item, 
 	if(parentItem->childCount() == 0)
 		noChildren = true;
 
-	if(addParent)
-		item->setParent(parentItem->parent()->child(parentItem->row()));
+	if(noChildren){
+		qDebug() << "latbc";
+		emit layoutAboutToBeChanged();
+	}
 
 	beginInsertRows(parent, row, row);
+	if(addParent)
+	{
+		TreeItemPtr p = getItemPtr(parent);
+		qDebug() << p->name();
+		item->setParent(p);
+	}
 	success = parentItem->insertChild(row, item);
 	endInsertRows();
 
-	if(noChildren)
-	{
+	if(noChildren){
+		qDebug() << "lc";
+		emit layoutChanged();
+	}
+
+	return success;
+}
+
+bool TreeModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+	qDebug() << "parent " << parent;
+
+	TreeItem *parentItem = getItem(parent);
+	Q_ASSERT(parentItem);
+	bool success = true;
+	bool noChildren = false;
+
+	if(parentItem->childCount() == 0)
+		noChildren = true;
+
+	if(noChildren){
+		qDebug() << "latbc";
 		emit layoutAboutToBeChanged();
-//		emit changePersistentIndex(QModelIndex(), QModelIndex());
+	}
+
+	QList<TreeItemPtr> items = getItemsToInsert();
+
+	if(items.isEmpty())
+	{
+		qDebug() << "No items to insert";
+		return false;
+	}
+
+	Q_ASSERT(count == items.count());
+
+	beginInsertRows(parent, row, row + count - 1);
+	foreach (TreeItemPtr item, items) {
+		item->setParent(getItemPtr(parent));
+	}
+	success = parentItem->insertChildren(row, items);
+	endInsertRows();
+
+	if(noChildren){
+		qDebug() << "lc";
 		emit layoutChanged();
 	}
 
@@ -328,14 +397,17 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 	if(parentItem->childCount() == count)
 		noChildren = true;
 
+	if(noChildren){
+		qDebug() << "latbc";
+		emit layoutAboutToBeChanged();
+	}
+
 	beginRemoveRows(parent, row, row + count - 1);
 	success = parentItem->removeChildren(row, count);
 	endRemoveRows();
 
-	if(noChildren)
-	{
-		emit layoutAboutToBeChanged();
-//		emit changePersistentIndex(QModelIndex(), QModelIndex());
+	if(noChildren){
+		qDebug() << "lc";
 		emit layoutChanged();
 	}
 

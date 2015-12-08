@@ -61,7 +61,7 @@ ApplicationWindow {
 		//			treeView.updateIndicator()
 		//		}
 		onLayoutChanged: {
-			treeView.updateIndicator()
+            treeView.updateIndicator()
 			treeViewSelection.reset()
 			keyViewSelection.reset()
 		}
