@@ -31,17 +31,17 @@ Item {
 		iconSource: "icons/edit-rename.png"
 		text: qsTr("Edit ...")
 		tooltip: qsTr("Edit")
-		enabled: treeView.selection.hasSelection || keyAreaView.selection.hasSelection || searchResultsView.selection.hasSelection
+		enabled: treeView.selection.hasSelection || tableView.selection.hasSelection || searchResultsView.selection.hasSelection
 
 		onTriggered: {
 			if(searchResultsView.activeFocus){
 				editKeyWindow.selectedNode = searchResultsView.currentIndex
 			}
-			else if(keyAreaView.activeFocus) {
-				editKeyWindow.selectedNode = filteredTableModel.mapToSource(keyAreaView.currentIndex)
+			else if(tableView.activeFocus) {
+				editKeyWindow.selectedNode = onlyLeavesProxyModel.mapToSource(tableView.currentIndex)
 			}
 			else if(treeView.activeFocus) {
-				editKeyWindow.selectedNode = filteredTreeModel.mapToSource(treeView.currentIndex)
+				editKeyWindow.selectedNode = noLeavesProxyModel.mapToSource(treeView.currentIndex)
 			}
 
 			editKeyWindow.populateMetaArea()
@@ -56,16 +56,16 @@ Item {
 		iconSource: "icons/document-close.png"
 		tooltip: qsTr("Delete")
 		shortcut: StandardKey.Delete
-		enabled: !(treeView.selection.hasSelection && keyAreaView.selection.hasSelection && searchResultsView.selection.hasSelection)
+		enabled: !(treeView.selection.hasSelection && tableView.selection.hasSelection && searchResultsView.selection.hasSelection)
 		onTriggered: {
 			if(searchResultsView.activeFocus){
 				undoManager.createDeleteKeyCommand(treeModel, searchResultsView.currentIndex)
 			}
-			else if(keyAreaView.activeFocus) {
-				undoManager.createDeleteKeyCommand(treeModel, filteredTableModel.mapToSource(keyAreaView.currentIndex))
+			else if(tableView.activeFocus) {
+				undoManager.createDeleteKeyCommand(treeModel, onlyLeavesProxyModel.mapToSource(tableView.currentIndex))
 			}
 			else if(treeView.activeFocus) {
-				undoManager.createDeleteKeyCommand(treeModel, filteredTreeModel.mapToSource(treeView.currentIndex))
+				undoManager.createDeleteKeyCommand(treeModel, noLeavesProxyModel.mapToSource(treeView.currentIndex))
 			}
 		}
 	}

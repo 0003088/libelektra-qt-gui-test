@@ -1,8 +1,8 @@
 //puts key to clipboard when cut key command for a key without children is executed
 function cutKey() {
 	//needed to mark the node
-	keyAreaView.keyAreaCopyIndex = keyAreaView.currentRow
-	keyAreaView.currentNodePath = treeView.currentNode.path
+	tableView.keyAreaCopyIndex = tableView.currentRow
+	tableView.currentNodePath = treeView.currentNode.path
 
 	undoManager.putToClipboard("cutKey", keyAreaSelectedItem.parentModel, keyAreaSelectedItem.index)
 	isPasted = false
@@ -11,7 +11,7 @@ function cutKey() {
 //puts key to clipboard when cut key command for a key with children is executed
 function cutBranch() {
 	treeView.treeAreaCopyIndex = treeView.currentNode.index
-	keyAreaView.currentNodePath = treeView.currentNode.path
+	tableView.currentNodePath = treeView.currentNode.path
 
 	undoManager.putToClipboard("cutBranch", treeView.currentNode.parentModel, treeView.currentNode.index)
 	isPasted = false
@@ -20,8 +20,8 @@ function cutBranch() {
 //puts key to clipboard when copy key command for a key without children is executed
 function copyKey() {
 	//needed to mark the node
-	keyAreaView.keyAreaCopyIndex = keyAreaView.currentRow
-	keyAreaView.currentNodePath = treeView.currentNode.path
+	tableView.keyAreaCopyIndex = tableView.currentRow
+	tableView.currentNodePath = treeView.currentNode.path
 
 	undoManager.putToClipboard("copyKey", keyAreaSelectedItem.parentModel, keyAreaSelectedItem.index)
 }
@@ -41,8 +41,8 @@ function paste() {
 	if(undoManager.clipboardType === "copyKey"){
 
 		undoManager.createCopyKeyCommand(treeView.currentNode.parentModel, treeView.currentNode.index)
-		keyAreaView.keyAreaCopyIndex = -1
-		keyAreaView.currentNodePath = ""
+		tableView.keyAreaCopyIndex = -1
+		tableView.currentNodePath = ""
 	}
 	else if(undoManager.clipboardType === "copyBranch"){
 
@@ -51,8 +51,8 @@ function paste() {
 	}
 	else if(undoManager.clipboardType === "cutKey"){
 
-		keyAreaView.keyAreaCopyIndex = -1
-		keyAreaView.currentNodePath = ""
+		tableView.keyAreaCopyIndex = -1
+		tableView.currentNodePath = ""
 
 		if(!isPasted){
 			undoManager.createCutKeyCommand(treeView.currentNode.parentModel, treeView.currentNode.index)
@@ -130,13 +130,13 @@ function deleteSearchResult(){
 
 //refreshes the key area view
 function updateKeyAreaSelection() {
-	keyAreaSelectedItem = keyAreaView.model.get(keyAreaView.currentRow)
+	keyAreaSelectedItem = tableView.model.get(tableView.currentRow)
 	editKeyWindow.selectedNode = keyAreaSelectedItem
 
-	keyAreaView.model.refresh()
-	keyAreaView.selection.clear()
-	keyAreaView.selection.select(keyAreaView.currentRow)
-	keyAreaView.forceActiveFocus()
+	tableView.model.refresh()
+	tableView.selection.clear()
+	tableView.selection.select(tableView.currentRow)
+	tableView.forceActiveFocus()
 }
 
 //refreshes a treeview model and preserves the current selected node
@@ -148,5 +148,5 @@ function refreshModel(treeModel) {
 }
 
 function updateStatusBar() {
-	path.text = !treeView.selection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeView.currentIndex), 258) + (!keyAreaView.selection.hasSelection ? "" :  "/" + treeModel.data(keyAreaView.currentIndex, 257))
+	path.text = !treeView.selection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeView.currentIndex), 258) + (!tableView.selection.hasSelection ? "" :  "/" + treeModel.data(tableView.currentIndex, 257))
 }

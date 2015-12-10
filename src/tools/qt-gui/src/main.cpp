@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 	engine.setObjectOwnership(&tableFilter, QQmlApplicationEngine::CppOwnership);
 
 	ctxt->setContextProperty("treeModel", &model);
-	ctxt->setContextProperty("filteredTreeModel", &treeFilter);
-	ctxt->setContextProperty("filteredTableModel", &tableFilter);
+	ctxt->setContextProperty("noLeavesProxyModel", &treeFilter);
+	ctxt->setContextProperty("onlyLeavesProxyModel", &tableFilter);
 	ctxt->setContextProperty("undoManager", &manager);
 
 	model.populateModel();

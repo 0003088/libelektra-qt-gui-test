@@ -44,9 +44,10 @@ public:
 	QVariant				data(const QModelIndex &index, int role) const;
 
 	bool					setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
-	bool					insertRow(int row, const QModelIndex &parent, TreeItemPtr item, bool addParent = true);
+//	bool					insertRow(int row, const QModelIndex &parent, TreeItemPtr item, bool addParent = true);
 	bool					insertRows(int row, int count, const QModelIndex &parent);
 	bool					removeRows(int row, int count, const QModelIndex &parent);
+	bool					hasChildren(const QModelIndex &parent) const;
 
 	void					sink(TreeItemPtr item, QStringList keys, const kdb::Key &key);
 	void					populateModel(const kdb::KeySet &keySet);
@@ -63,6 +64,9 @@ public:
 	Path					pathFromIndex(const QModelIndex &index);
 
 	QList<TreeItemPtr>		getItemsToInsert() const;
+
+signals:
+	void					invalidateFilter() const;
 
 private:
 	TreeItemPtr				m_rootItem;

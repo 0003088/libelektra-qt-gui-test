@@ -168,7 +168,7 @@ void TreeItem::setParent(TreeItemPtr parent)
 }
 
 TreeItemPtr TreeItem::child(int row) const
-{		
+{
 	if(row < 0 || row > m_children.count()-1)
 		return TreeItemPtr();
 
@@ -345,11 +345,12 @@ bool TreeItem::removeChildren(int row, int count)
 {
 	if(row < 0 || row + count > m_children.count())
 		return false;
-	qDebug() << "childcount of " << m_name << " " << m_children.count();
+
 	for(int i = 0; i < count; i++)
 	{
+		m_children.at(row)->setParent(TreeItemPtr());
 		m_children.removeAt(row);
 	}
-	qDebug() << "childcount of " << m_name << " " << m_children.count();
+
 	return true;
 }

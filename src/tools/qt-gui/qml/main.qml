@@ -60,8 +60,8 @@ ApplicationWindow {
 		//		onUpdateIndicator: {
 		//			treeView.updateIndicator()
 		//		}
-		onLayoutChanged: {
-            treeView.updateIndicator()
+		onInvalidateFilter: {
+			treeView.updateIndicator()
 			treeViewSelection.reset()
 			keyViewSelection.reset()
 		}
@@ -192,8 +192,8 @@ ApplicationWindow {
 
 				anchors.fill: parent
 				anchors.leftMargin: defaultMargins
-				onSelectionChanged: text = !treeViewSelection.hasSelection ? "" : treeModel.data(filteredTreeModel.mapToSource(treeViewSelection.currentIndex), 258) +
-														 (!keyViewSelection.hasSelection ? "" :  "/" + treeModel.data(filteredTableModel.mapToSource(keyViewSelection.currentIndex), 257))
+				onSelectionChanged: text = !treeViewSelection.hasSelection ? "" : treeModel.data(noLeavesProxyModel.mapToSource(treeViewSelection.currentIndex), 258) +
+														 (!keyViewSelection.hasSelection ? "" :  "/" + treeModel.data(onlyLeavesProxyModel.mapToSource(keyViewSelection.currentIndex), 257))
 			}
 		}
 	}
@@ -225,16 +225,16 @@ ApplicationWindow {
 				alternatingRowColors: false
 				frameVisible: false
 
-				model: filteredTreeModel
+				model: noLeavesProxyModel
 
 				selection: ItemSelectionModel {
 					id: treeViewSelection
 
-					model: filteredTreeModel
+					model: noLeavesProxyModel
 					onSelectionChanged: {
-						keyAreaView.rootIndex = filteredTableModel.mapFromSource(filteredTreeModel.mapToSource(currentIndex))
+						tableView.rootIndex = onlyLeavesProxyModel.mapFromSource(noLeavesProxyModel.mapToSource(currentIndex))
 						keyViewSelection.clearSelection()
-						metaAreaView.model = null
+						metaView.model = null
 					}
 				}
 
@@ -243,8 +243,8 @@ ApplicationWindow {
 						id: label
 
 						anchors.verticalCenter: parent.verticalCenter
-						color: filteredTreeModel !== null ? (filteredTreeModel.data(styleData.index, 265) ? disabledPalette.windowText : activePalette.text) : ""
-						text: styleData.value
+						color: noLeavesProxyModel !== null ? (noLeavesProxyModel.data(styleData.index, 265) ? disabledPalette.windowText : activePalette.text) : ""
+						text: styleData.value + " " + " (" + styleData.index + ")" + (noLeavesProxyModel === null ? "" : noLeavesProxyModel.data(styleData.index, 262))
 					}
 					Item {
 						id: spacer
@@ -262,10 +262,10 @@ ApplicationWindow {
 						width: label.font.pixelSize*0.85
 						height: width
 						anchors.verticalCenter: label.verticalCenter
-						opacity: (filteredTreeModel !== null ? (treeModel.data(filteredTreeModel.mapToSource(styleData.index), 262) > 0 && treeModel.data(filteredTreeModel.mapToSource(styleData.index), 263) ? 1 : 0) : 0)
+						opacity: (noLeavesProxyModel !== null ? (treeModel.data(noLeavesProxyModel.mapToSource(styleData.index), 262) > 0 && treeModel.data(noLeavesProxyModel.mapToSource(styleData.index), 263) ? 1 : 0) : 0)
 						onUpdateIndicator: {
 							paintcolor = label.color
-							opacity = (filteredTreeModel !== null ? (treeModel.data(filteredTreeModel.mapToSource(styleData.index), 262) > 0 && treeModel.data(filteredTreeModel.mapToSource(styleData.index), 263) ? 1 : 0) : 0)
+							opacity = (noLeavesProxyModel !== null ? (treeModel.data(noLeavesProxyModel.mapToSource(styleData.index), 262) > 0 && treeModel.data(noLeavesProxyModel.mapToSource(styleData.index), 263) ? 1 : 0) : 0)
 
 						}
 					}
@@ -288,19 +288,19 @@ ApplicationWindow {
 				height: keyAreaHeight
 
 				TreeView {
-					id: keyAreaView
+					id: tableView
 
 					anchors.fill: parent
 					anchors.margins: 1
 					frameVisible: false
 					alternatingRowColors: false
 					backgroundVisible: false
-					onCurrentIndexChanged: metaAreaView.model = treeModel.data(filteredTableModel.mapToSource(currentIndex), 266)
-					model: filteredTableModel
+					onCurrentIndexChanged: metaView.model = treeModel.data(onlyLeavesProxyModel.mapToSource(currentIndex), 266)
+					model: onlyLeavesProxyModel
 
 					selection: ItemSelectionModel {
 						id: keyViewSelection
-						model: filteredTableModel
+						model: onlyLeavesProxyModel
 					}
 
 					TableViewColumn {
@@ -326,7 +326,7 @@ ApplicationWindow {
 				height: metaAreaHeight
 
 				TableView {
-					id: metaAreaView
+					id: metaView
 
 					anchors.fill: parent
 					anchors.margins: 1
