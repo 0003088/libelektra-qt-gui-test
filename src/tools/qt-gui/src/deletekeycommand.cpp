@@ -29,9 +29,8 @@ void DeleteKeyCommand::undo()
 //			m_model->removeRow(index.row(), index);
 
 		QList<TreeItemPtr> items;
-		TreeItemPtr newItem = TreeItemPtr(new TreeItem(*m_item.data()));
-		Q_ASSERT(newItem);
-		items.append(newItem);
+		Q_ASSERT(m_item);
+		items.append(m_item);
 		m_model->setItemsToInsert(items);
 
 		m_model->insertRows(m_row, items.count(), index);
@@ -47,8 +46,6 @@ void DeleteKeyCommand::redo()
 	if (index.isValid())
 	{
 		m_model->removeRow(m_row, index);
-		if(m_item->parent())
-			qDebug() << "parent " << m_item->parent()->name();
 //		if(m_isRoot)
 //			m_model->insertRow(index.row(), index.parent(), m_root, false);
 		//	m_model->refreshArrayNumbers();

@@ -244,7 +244,7 @@ ApplicationWindow {
 
 						anchors.verticalCenter: parent.verticalCenter
 						color: noLeavesProxyModel !== null ? (noLeavesProxyModel.data(styleData.index, 265) ? disabledPalette.windowText : activePalette.text) : ""
-						text: styleData.value + " " + " (" + styleData.index + ")" + (noLeavesProxyModel === null ? "" : noLeavesProxyModel.data(styleData.index, 262))
+						text: styleData.value
 					}
 					Item {
 						id: spacer

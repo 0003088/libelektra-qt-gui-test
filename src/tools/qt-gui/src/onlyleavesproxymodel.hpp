@@ -11,6 +11,10 @@ public:
 	explicit OnlyLeavesProxyModel(QObject *parent = 0) {}
 
 	bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+	void setSourceModel(QAbstractItemModel *sourceModel);
+
+public slots:
+	void invalidateFilter();
 };
 
 #endif // ONLYLEAVESPROXYMODEL_HPP
